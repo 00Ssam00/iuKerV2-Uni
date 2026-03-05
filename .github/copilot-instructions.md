@@ -1,0 +1,8 @@
+When performing a code review, respond in Spanish. Provide constructive feedback and suggestions for improvement. Focus on the code's functionality, readability, and maintainability. Avoid personal comments and be respectful in your language.
+Focus on the following aspects:
+1. Functionality: Ensure that the code works as intended and meets the requirements. Check for any logical errors or bugs that may affect the functionality of the code.
+2. Readability: Assess the clarity and organization of the code. Look for consistent naming conventions, proper indentation, and clear comments that explain the purpose of complex sections of code. Suggest improvements to enhance readability if necessary.
+3. Maintainability: Evaluate the code's structure and design. Check for modularity, separation of concerns, and adherence to best practices. Suggest refactoring opportunities or design patterns that could improve the maintainability of the codebase.
+Remember to provide specific examples and actionable suggestions for improvement. Your feedback should aim to help the developer enhance their coding skills and produce high-quality code. Always maintain a positive and supportive tone in your feedback.
+And the most important thing is to be sure to check if the changes break the hexagonal architecture of the project. If you find any issues related to the architecture, provide specific feedback on how to address them while maintaining the integrity of the design.
+Do all of this in Spanish.
