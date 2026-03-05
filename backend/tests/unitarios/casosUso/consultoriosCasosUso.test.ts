@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, jest as jestImport } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { ConsultorioCasosUso } from '../../../src/core/aplicacion/consultorio/ConsultoriosCasosUso.js';
 import { IConsultoriosRepositorio } from '../../../src/core/dominio/consultorio/IConsultoriosRepositorio.js';
 import { IConsultorio } from '../../../src/core/dominio/consultorio/IConsultorio.js';
-import { ConsultorioRespuestaDTO } from '../../../src/core/infraestructura/repositorios/postgres/dtos/consultorioRespuestaDTO.js';
+import { ConsultorioRespuestaDTO } from
+'../../../src/core/infraestructura/repositorios/postgres/dtos/consultorioRespuestaDTO.js';
 
 describe('ConsultorioCasosUso', () => {
   // Varibles usadas en todos los test
@@ -23,22 +24,22 @@ describe('ConsultorioCasosUso', () => {
   beforeEach(() => {
     // Crear mock del repositorio
     mockRepositorio = {
-      agregarConsultorio: jestImport.fn() as any,
-      listarConsultorios: jestImport.fn() as any,
-      obtenerConsultorioPorId: jestImport.fn() as any,
-      actualizarConsultorio: jestImport.fn() as any,
-      eliminarConsultorio: jestImport.fn() as any,
+      agregarConsultorio: jest.fn() as any,
+      listarConsultorios: jest.fn() as any,
+      obtenerConsultorioPorId: jest.fn() as any,
+      actualizarConsultorio: jest.fn() as any,
+      eliminarConsultorio: jest.fn() as any,
     } as jest.Mocked<IConsultoriosRepositorio>;
 
     // Crear instancia del caso de uso con el mock
     consultorioCasosUso = new ConsultorioCasosUso(mockRepositorio);
 
     // 'silencia' console.log para evitar salida en tests
-    jestImport.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
   });
   // Al conttrario de beforeEach, este se ejecuta DESPUES de cada test
   afterEach(() => {
-    jestImport.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('agregarConsultorio', () => {

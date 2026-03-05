@@ -1,7 +1,8 @@
-import { describe, expect, beforeEach, jest } from '@jest/globals';
+import { describe, expect, beforeEach, jest, test } from '@jest/globals';
 import { CitasMedicasCasosUso } from '../../../src/core/aplicacion/citaMedica/CitasMedicasCasosUso.js';
 import { ICitasMedicasRepositorio } from '../../../src/core/dominio/citaMedica/ICitasMedicasRepositorio.js';
-import { CitaMedicaRespuestaDTO } from '../../../src/core/infraestructura/repositorios/postgres/dtos/CitaMedicaRespuestaDTO.js';
+import { CitaMedicaRespuestaDTO } from
+'../../../src/core/infraestructura/repositorios/postgres/dtos/CitaMedicaRespuestaDTO.js';
 import { CodigosDeError } from '../../../src/core/dominio/errores/codigosDeError.enum.js';
 
 describe('Pruebas unitarias CitasMedicasCasosUso', () => {
@@ -28,6 +29,7 @@ describe('Pruebas unitarias CitasMedicasCasosUso', () => {
   });
 
   test('Obtener todas las citas médicas - Sin limite', async () => {
+    // Arrange
     const respestaEsperada: CitaMedicaRespuestaDTO[] = [
       {
         idCita: 'feaac82c-2904-429a-a344-4591cc765bdb',
@@ -75,25 +77,31 @@ describe('Pruebas unitarias CitasMedicasCasosUso', () => {
 
     citasMedicasRepoMock.obtenerCitas.mockResolvedValue(respestaEsperada);
 
+    // Act
     const resultado = await citasMedicasCasosUso.obtenerCitas();
 
+    // Assert
     expect(citasMedicasRepoMock.obtenerCitas).toHaveBeenCalled();
     expect(resultado).toEqual(respestaEsperada);
   });
 
   test('Obtener todas las citas médicas - Retorna array vacío cuando no hay citas', async () => {
+    // Arrange
     const respestaEsperada: CitaMedicaRespuestaDTO[] = [];
 
     citasMedicasRepoMock.obtenerCitas.mockResolvedValue(respestaEsperada);
 
+    // Act
     const resultado = await citasMedicasCasosUso.obtenerCitas();
 
+    // Assert
     expect(citasMedicasRepoMock.obtenerCitas).toHaveBeenCalled();
     expect(resultado).toEqual(respestaEsperada);
     expect(resultado).toHaveLength(0);
   });
 
   test('Obtener todas las citas médicas - con limite', async () => {
+    // Arrange
     const respestaEsperada: CitaMedicaRespuestaDTO[] = [
       {
         idCita: 'feaac82c-2904-429a-a344-4591cc765bdb',
@@ -127,14 +135,18 @@ describe('Pruebas unitarias CitasMedicasCasosUso', () => {
 
     const limite = 2;
     citasMedicasRepoMock.obtenerCitas.mockResolvedValue(respestaEsperada.slice(0, limite));
+
+    // Act
     const resultado = await citasMedicasCasosUso.obtenerCitas(limite);
 
+    // Assert
     expect(citasMedicasRepoMock.obtenerCitas).toHaveBeenCalled();
     expect(citasMedicasRepoMock.obtenerCitas).toHaveBeenCalledWith(limite);
     expect(resultado).toEqual(respestaEsperada.slice(0, limite));
   });
 
   test('Obtener cita por id', async () => {
+    // Arrange
     const respestaEsperada: CitaMedicaRespuestaDTO = {
       idCita: 'feaac82c-2904-429a-a344-4591cc765bdb',
       paciente: 'Juan Pérez',
@@ -154,29 +166,36 @@ describe('Pruebas unitarias CitasMedicasCasosUso', () => {
 
     citasMedicasRepoMock.obtenerCitaPorId.mockResolvedValue(respestaEsperada);
 
+    // Act
     const resultado = await citasMedicasCasosUso.obtenerCitaPorId(id);
+
+    // Assert
     expect(citasMedicasRepoMock.obtenerCitaPorId).toHaveBeenCalledWith(id);
     expect(resultado).toEqual(respestaEsperada);
   });
 
   test('Debe lanzar un error cuando la cita no existe', async () => {
+    // Arrange
     const idInexistente = 'id-falso-123';
 
     citasMedicasRepoMock.obtenerCitaPorId.mockResolvedValue(null);
 
     let errorCapturado: any = null;
 
+    // Act
     try {
       await citasMedicasCasosUso.obtenerCitaPorId(idInexistente);
     } catch (error) {
       errorCapturado = error;
     }
 
+    // Assert
     expect(errorCapturado).not.toBeNull();
     expect(errorCapturado.codigoInterno).toBe(CodigosDeError.CITA_NO_EXISTE);
   });
 
   test('Debe eliminar la cita correctamente cuando existe', async () => {
+    // Arrange
     const idCita = 'feaac82c-2904-429a-a344-4591cc765bdb';
 
     const citaExistente: CitaMedicaRespuestaDTO = {
@@ -198,25 +217,30 @@ describe('Pruebas unitarias CitasMedicasCasosUso', () => {
 
     citasMedicasRepoMock.eliminarCita.mockResolvedValue(undefined);
 
+    // Act
     await citasMedicasCasosUso.eliminarCita(idCita);
 
+    // Assert
     expect(citasMedicasRepoMock.obtenerCitaPorId).toHaveBeenCalledWith(idCita);
     expect(citasMedicasRepoMock.eliminarCita).toHaveBeenCalledWith(idCita);
   });
 
   test('Debe lanzar un error cuando la cita no existe', async () => {
+    // Arrange
     const idInexistente = 'no-existe-123';
 
     citasMedicasRepoMock.obtenerCitaPorId.mockResolvedValue(null);
 
     let errorCapturado: any = null;
 
+    // Act
     try {
       await citasMedicasCasosUso.eliminarCita(idInexistente);
     } catch (error) {
       errorCapturado = error;
     }
 
+    // Assert
     expect(errorCapturado).not.toBeNull();
 
     expect(JSON.stringify(errorCapturado)).toContain(CodigosDeError.CITA_NO_EXISTE);

@@ -1,10 +1,12 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import request from 'supertest';
-import { manejadorGlobalDeErrores } from '../../src/core/infraestructura/controladores/manejoGlobalDeErrores.js';
+import { manejadorGlobalDeErrores } from
+'../../src/core/infraestructura/controladores/manejoGlobalDeErrores.js';
 import { ErrorDeAplicacion } from '../../src/core/dominio/errores/ErrorDeAplicacion.js';
 import { EstadoHttp } from '../../src/core/infraestructura/controladores/estadoHttp.enum.js';
 import { CodigosDeError } from '../../src/core/dominio/errores/codigosDeError.enum.js';
 import { ZodError } from 'zod';
+import { describe, expect, beforeAll, afterAll, test } from '@jest/globals';
 
 describe('Manejo Global de Errores (Integración)', () => {
   let app: FastifyInstance;
@@ -40,8 +42,10 @@ describe('Manejo Global de Errores (Integración)', () => {
   });
 
   test('debería interceptar ErrorDeAplicacion y devolver su código y mensaje correctos', async () => {
+    // Act
     const response = await request(app.server).get('/test/error-dominio');
 
+    // Assert
     expect(response.status).toBe(EstadoHttp.CONFLICTO);
     expect(response.body).toEqual({
       mensaje: 'Error de dominio simulado',
@@ -50,8 +54,10 @@ describe('Manejo Global de Errores (Integración)', () => {
   });
 
   test('debería interceptar ZodError y devolver formato de error de validación', async () => {
+    // Act
     const response = await request(app.server).get('/test/error-zod');
 
+    // Assert
     expect(response.status).toBe(EstadoHttp.PETICION_INVALIDA);
     expect(response.body).toHaveProperty('mensaje');
     expect(response.body).toHaveProperty('detalles');
@@ -62,8 +68,10 @@ describe('Manejo Global de Errores (Integración)', () => {
   });
 
   test('debería interceptar errores no controlados y devolver 500', async () => {
+    // Act
     const response = await request(app.server).get('/test/error-generico');
 
+    // Assert
     expect(response.status).toBe(EstadoHttp.ERROR_INTERNO_SERVIDOR);
     expect(response.body).toEqual({
       mensaje: 'Fallo interno en el servidor.',

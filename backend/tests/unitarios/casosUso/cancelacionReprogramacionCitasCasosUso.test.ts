@@ -1,11 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach, jest as jestImport } from '@jest/globals';
-import { CancelacionReprogramacionCitasCasosUso } from '../../../src/core/aplicacion/servicios/cancelacionReprogramacionCita/CancelacionReprogramacionCitasCasosUso.js';
-import { ICitasMedicasRepositorio } from '../../../src/core/dominio/citaMedica/ICitasMedicasRepositorio.js';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import { CancelacionReprogramacionCitasCasosUso } from
+'../../../src/core/aplicacion/servicios/cancelacionReprogramacionCita/CancelacionReprogramacionCitasCasosUso.js';
+import { ICitasMedicasRepositorio } from
+'../../../src/core/dominio/citaMedica/ICitasMedicasRepositorio.js';
 import { IMedicosRepositorio } from '../../../src/core/dominio/medico/IMedicosRepositorio.js';
-import { CitaMedicaRespuestaDTO } from '../../../src/core/infraestructura/repositorios/postgres/dtos/CitaMedicaRespuestaDTO.js';
+import { CitaMedicaRespuestaDTO } from
+'../../../src/core/infraestructura/repositorios/postgres/dtos/CitaMedicaRespuestaDTO.js';
 import { citaMedicaSolicitudDTO } from '../../../src/core/infraestructura/esquemas/citaMedicaEsquema.js';
 import { estadoCita } from '../../../src/common/estadoCita.enum.js';
-import { MedicoRepuestaDTO } from '../../../src/core/infraestructura/repositorios/postgres/dtos/MedicoRespuestaDTO.js';
+import { MedicoRepuestaDTO } from
+'../../../src/core/infraestructura/repositorios/postgres/dtos/MedicoRespuestaDTO.js';
 
 describe('CancelacionReprogramacionCitasCasosUso', () => {
   let casosUso: CancelacionReprogramacionCitasCasosUso;
@@ -21,7 +25,7 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
     medico: 'Dr. Carlos Rodríguez',
     ubicacion: 'Edificio A, Piso 2',
     consultorio: 'C101',
-    fecha: '2025-12-01T00:00:00.000Z',
+    fecha: '2030-12-01T00:00:00.000Z',
     horaInicio: '10:00:00',
     codigoEstadoCita: estadoCita.ACTIVADA,
     estadoCita: 'Activa',
@@ -34,7 +38,7 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
     numeroDoc: 'Rodríguez',
     nombre: 'Cédula',
     apellido: '123456789',
-    fechaNacimiento: '2025-12-01',
+    fechaNacimiento: '1990-01-01',
     sexo: 'F',
     especialidad: 'Medicina General',
     email: 'carlos@example.com',
@@ -45,34 +49,34 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
     medico: 'MED123',
     tipoDocPaciente: 1,
     numeroDocPaciente: '100001',
-    fecha: '2025-12-15',
+    fecha: '2030-12-15',
     horaInicio: '14:00',
   };
 
   beforeEach(() => {
     // Crear mocks de los repositorios
     mockCitasRepo = {
-      obtenerCitas: jestImport.fn() as any,
-      obtenerCitaPorId: jestImport.fn() as any,
-      agendarCita: jestImport.fn() as any,
-      eliminarCita: jestImport.fn() as any,
-      validarDisponibilidadMedico: jestImport.fn() as any,
-      validarCitasPaciente: jestImport.fn() as any,
-      validarTurnoMedico: jestImport.fn() as any,
-      reprogramarCita: jestImport.fn() as any,
-      cancelarCita: jestImport.fn() as any,
-      finalizarCita: jestImport.fn() as any,
-      eliminarCitasPorPaciente: jestImport.fn() as any,
-      obtenerCitasPorPaciente: jestImport.fn() as any,
-      eliminarCitasPorMedico: jestImport.fn() as any,
+      obtenerCitas: jest.fn() as any,
+      obtenerCitaPorId: jest.fn() as any,
+      agendarCita: jest.fn() as any,
+      eliminarCita: jest.fn() as any,
+      validarDisponibilidadMedico: jest.fn() as any,
+      validarCitasPaciente: jest.fn() as any,
+      validarTurnoMedico: jest.fn() as any,
+      reprogramarCita: jest.fn() as any,
+      cancelarCita: jest.fn() as any,
+      finalizarCita: jest.fn() as any,
+      eliminarCitasPorPaciente: jest.fn() as any,
+      obtenerCitasPorPaciente: jest.fn() as any,
+      eliminarCitasPorMedico: jest.fn() as any,
     } as jest.Mocked<ICitasMedicasRepositorio>;
 
     mockMedicosRepo = {
-      crearMedico: jestImport.fn() as any,
-      listarMedicos: jestImport.fn() as any,
-      obtenerMedicoPorTarjetaProfesional: jestImport.fn() as any,
-      actualizarMedico: jestImport.fn() as any,
-      eliminarMedico: jestImport.fn() as any,
+      crearMedico: jest.fn() as any,
+      listarMedicos: jest.fn() as any,
+      obtenerMedicoPorTarjetaProfesional: jest.fn() as any,
+      actualizarMedico: jest.fn() as any,
+      eliminarMedico: jest.fn() as any,
     } as jest.Mocked<IMedicosRepositorio>;
 
     casosUso = new CancelacionReprogramacionCitasCasosUso(
@@ -81,11 +85,11 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
     );
 
     // Mockear console.log para evitar salida en tests
-    jestImport.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    jestImport.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('cancelarCita', () => {
@@ -154,7 +158,7 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
       // Arrange
       const citaReprogramada = {
         ...citaMock,
-        fecha: '2025-12-15T00:00:00.000Z',
+        fecha: '2030-12-15T00:00:00.000Z',
         horaInicio: '14:00:00',
         codigoEstadoCita: estadoCita.ACTIVADA
       };
@@ -172,9 +176,9 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
       // Assert
       expect(mockCitasRepo.obtenerCitaPorId).toHaveBeenCalledWith('976f511c-a2a6-4aa7-9089-641f6fbe20b3');
       expect(mockMedicosRepo.obtenerMedicoPorTarjetaProfesional).toHaveBeenCalledWith('MED123');
-      expect(mockCitasRepo.validarTurnoMedico).toHaveBeenCalledWith('MED123', '2025-12-15', '14:00');
-      expect(mockCitasRepo.validarCitasPaciente).toHaveBeenCalledWith(1, '100001', '2025-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3');
-      expect(mockCitasRepo.validarDisponibilidadMedico).toHaveBeenCalledWith('MED123', '2025-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3');
+      expect(mockCitasRepo.validarTurnoMedico).toHaveBeenCalledWith('MED123', '2030-12-15', '14:00');
+      expect(mockCitasRepo.validarCitasPaciente).toHaveBeenCalledWith(1, '100001', '2030-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3');
+      expect(mockCitasRepo.validarDisponibilidadMedico).toHaveBeenCalledWith('MED123', '2030-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3');
       expect(mockCitasRepo.reprogramarCita).toHaveBeenCalled();
       expect(resultado).toEqual(citaReprogramada);
     });
@@ -275,10 +279,10 @@ describe('CancelacionReprogramacionCitasCasosUso', () => {
 
       // Assert Verificar que se pasa el ID para excluir la cita actual
       expect(mockCitasRepo.validarCitasPaciente).toHaveBeenCalledWith(
-        1, '100001', '2025-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3'
+        1, '100001', '2030-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3'
       );
       expect(mockCitasRepo.validarDisponibilidadMedico).toHaveBeenCalledWith(
-        'MED123', '2025-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3'
+        'MED123', '2030-12-15', '14:00', '976f511c-a2a6-4aa7-9089-641f6fbe20b3'
       );
     });
 
