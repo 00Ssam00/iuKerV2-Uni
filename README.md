@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://github.com/00Ssam00/iuKerV2-Uni/blob/main/documentacion/logos/logoVertical.svg" alt="Logo del proyecto" width="300" height="300">
+  <img src="https://github.com/00Ssam00/iuKerV2-Uni/blob/main/documentacion/logos/logoVertical.svg" alt="Logo del proyecto" width="400" height="400">
 </h1>
 
 ## 1️⃣ Clonar el repositorio
