@@ -1,10 +1,11 @@
 import { MedicosCasosUso} from '../../../src/core/aplicacion/medico/MedicosCasosUso.ts'
 import { IMedicosRepositorio } from '../../../src/core/dominio/medico/IMedicosRepositorio.ts';
 import { IMedico } from '../../../src/core/dominio/medico/IMedico.ts';
-import { IAsignacionMedicoRepositorio } from '../../../src/core/dominio/asignacionMedico/IAsignacionMedicoRepositorio.ts';
+import { IAsignacionMedicoRepositorio } from
+'../../../src/core/dominio/asignacionMedico/IAsignacionMedicoRepositorio.ts';
 import { ICitasMedicasRepositorio } from '../../../src/core/dominio/citaMedica/ICitasMedicasRepositorio.ts';
 import { MedicoRepuestaDTO } from '../../../src/core/infraestructura/repositorios/postgres/dtos/MedicoRespuestaDTO.ts';
-import { jest } from '@jest/globals';
+import { describe, expect, beforeEach, jest, test } from '@jest/globals';
 
 describe('Pruebas unitarias para MedicosCasosUso', () => {
     let medicoRepoMock: jest.Mocked<IMedicosRepositorio>;
@@ -48,6 +49,7 @@ describe('Pruebas unitarias para MedicosCasosUso', () => {
     });
 
     test('Crear un Médico', async () => {
+        // Arrange
         const respuestaEsperadaMock: MedicoRepuestaDTO = {
             tarjetaProfesional: 'MP001',
             tipoDoc: 'Cédula',
@@ -76,12 +78,16 @@ describe('Pruebas unitarias para MedicosCasosUso', () => {
             telefono: '3001112222'
         };
 
+        // Act
         const resultado = await medicosCasosUso.crearMedico(datosPrueba);
+
+        // Assert
         expect(medicoRepoMock.crearMedico).toHaveBeenCalled();
         expect(resultado).toEqual(respuestaEsperadaMock);
     });
 
     test('Listar todos los médicos - Sin limite', async () => {
+        // Arrange
         const respuestaEsperadaMock: MedicoRepuestaDTO[] = [
             {
             tarjetaProfesional: "MP001",
@@ -111,12 +117,16 @@ describe('Pruebas unitarias para MedicosCasosUso', () => {
 
         medicoRepoMock.listarMedicos.mockResolvedValue(respuestaEsperadaMock);
 
+        // Act
         const resultado = await medicosCasosUso.listarMedicos();
+
+        // Assert
         expect(medicoRepoMock.listarMedicos).toHaveBeenCalled();
         expect(resultado).toEqual(respuestaEsperadaMock);
     });
 
     test('Listar todos los médicos - Con limite', async () => {
+        // Arrange
         const respuestaEsperadaMock: MedicoRepuestaDTO[] = [
             {
             tarjetaProfesional: "MP001",
@@ -171,14 +181,18 @@ describe('Pruebas unitarias para MedicosCasosUso', () => {
         const limite = 2;
 
         medicoRepoMock.listarMedicos.mockResolvedValue(respuestaEsperadaMock.slice(0, limite));
+
+        // Act
         const resultado = await medicosCasosUso.listarMedicos(limite);
 
+        // Assert
         expect(medicoRepoMock.listarMedicos).toHaveBeenCalled();
         expect(medicoRepoMock.listarMedicos).toHaveBeenCalledWith(limite);
         expect(resultado).toEqual(respuestaEsperadaMock.slice(0, limite));
     });
 
     test('Obtener Médico por Tarjeta Profesional', async () => {
+        // Arrange
         const respuestaEsperadaMock: MedicoRepuestaDTO | null = {
             tarjetaProfesional: "MP001",
             tipoDoc: "Cédula",
@@ -195,14 +209,18 @@ describe('Pruebas unitarias para MedicosCasosUso', () => {
         const tarjetaProfesional = "MP001";
 
         medicoRepoMock.obtenerMedicoPorTarjetaProfesional.mockResolvedValue(respuestaEsperadaMock);
+
+        // Act
         const resultado = await medicosCasosUso.obtenerMedicoPorTarjetaProfesional(tarjetaProfesional);
 
+        // Assert
         expect(medicoRepoMock.obtenerMedicoPorTarjetaProfesional).toHaveBeenCalled();
         expect(medicoRepoMock.obtenerMedicoPorTarjetaProfesional).toHaveBeenCalledWith(tarjetaProfesional);
         expect(resultado).toEqual(respuestaEsperadaMock);
     });
 
     test('Actualizar un Médico por Tarjeta Profesional', async () => {
+        // Arrange
         const respuestaEsperadaMock: MedicoRepuestaDTO = {
             tarjetaProfesional: 'MP001',
             tipoDoc: 'Cédula',
@@ -225,22 +243,28 @@ describe('Pruebas unitarias para MedicosCasosUso', () => {
         const tarjetaProfesional = "MP001";
 
         medicoRepoMock.actualizarMedico.mockResolvedValue(respuestaEsperadaMock);
+
+        // Act
         const resultado = await medicosCasosUso.actualizarMedico(tarjetaProfesional, datosPrueba);
 
+        // Assert
         expect(medicoRepoMock.actualizarMedico).toHaveBeenCalled();
         expect(medicoRepoMock.actualizarMedico).toHaveBeenCalledWith(tarjetaProfesional, datosPrueba);
         expect(resultado).toEqual(respuestaEsperadaMock);
     });
 
     test('Eliminar un Médico por Tarjeta Profesional', async () => {
+        // Arrange
         const tarjetaProfesional = "MP001";
 
         asignacionMedicoRepoMock.eliminarAsignacion.mockResolvedValueOnce(undefined);
         citasMedicasRepoMock.eliminarCitasPorMedico.mockResolvedValueOnce(undefined);
         medicoRepoMock.eliminarMedico.mockResolvedValueOnce(undefined);
 
+        // Act
         await medicosCasosUso.eliminarMedico(tarjetaProfesional);
 
+        // Assert
         expect(asignacionMedicoRepoMock.eliminarAsignacion).toHaveBeenCalledWith(tarjetaProfesional);
         expect(citasMedicasRepoMock.eliminarCitasPorMedico).toHaveBeenCalledWith(tarjetaProfesional);
         expect(medicoRepoMock.eliminarMedico).toHaveBeenCalledWith(tarjetaProfesional);

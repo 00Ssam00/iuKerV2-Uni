@@ -2,13 +2,18 @@ import { crearErrorDeDominio } from '../../../src/core/dominio/errores/manejoDeE
 import { CodigosDeError } from '../../../src/core/dominio/errores/codigosDeError.enum.js';
 import { ErrorDeAplicacion } from '../../../src/core/dominio/errores/ErrorDeAplicacion.js';
 import { EstadoHttp } from '../../../src/core/infraestructura/controladores/estadoHttp.enum.js';
+import { describe, expect, test } from '@jest/globals';
 
 describe('Sistema de Manejo de Errores', () => {
   describe('crearErrorDeDominio', () => {
     test('debería crear un error correctamente para el código (CITA_NO_EXISTE)', () => {
+      // Arrange
       const codigo = CodigosDeError.CITA_NO_EXISTE;
+
+      // Act
       const error = crearErrorDeDominio(codigo);
 
+      // Assert
       expect(error).toBeInstanceOf(ErrorDeAplicacion);
       expect(error.codigoInterno).toBe(codigo);
       expect(error.estado).toBe(EstadoHttp.NO_ENCONTRADO);
@@ -16,9 +21,13 @@ describe('Sistema de Manejo de Errores', () => {
     });
 
     test('debería crear un error correctamente para el código (PACIENTE_YA_EXISTE)', () => {
+      // Arrange
       const codigo = CodigosDeError.PACIENTE_YA_EXISTE;
+
+      // Act
       const error = crearErrorDeDominio(codigo);
 
+      // Assert
       expect(error).toBeInstanceOf(ErrorDeAplicacion);
       expect(error.codigoInterno).toBe(codigo);
       expect(error.estado).toBe(EstadoHttp.CONFLICTO);
@@ -26,10 +35,14 @@ describe('Sistema de Manejo de Errores', () => {
     });
 
     test('debería devolver un error genérico para un código no mapeado', () => {
+      // Arrange
       // @ts-ignore - Forzamos un código inválido para probar el fallback
       const codigoInvalido = 'CODIGO_INEXISTENTE' as CodigosDeError;
+
+      // Act
       const error = crearErrorDeDominio(codigoInvalido);
 
+      // Assert
       expect(error).toBeInstanceOf(ErrorDeAplicacion);
       expect(error.codigoInterno).toBe(CodigosDeError.PARAMETROS_INVALIDOS);
       expect(error.estado).toBe(EstadoHttp.PETICION_INVALIDA);
@@ -39,12 +52,15 @@ describe('Sistema de Manejo de Errores', () => {
 
   describe('ErrorDeAplicacion', () => {
     test('debería instanciarse correctamente con propiedades personalizadas', () => {
+      // Arrange
       const estado = EstadoHttp.ERROR_INTERNO_SERVIDOR;
       const mensaje = 'Mensaje de prueba';
       const codigo = CodigosDeError.PARAMETROS_INVALIDOS;
 
+      // Act
       const error = new ErrorDeAplicacion(estado, mensaje, codigo);
 
+      // Assert
       expect(error).toBeInstanceOf(Error);
       expect(error.name).toBe('ErrorDeAplicacion');
       expect(error.estado).toBe(estado);
