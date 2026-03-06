@@ -5,3 +5,5 @@ dist/
 .vscode/
 .idea/
 coverage/
+.af
+*.af
