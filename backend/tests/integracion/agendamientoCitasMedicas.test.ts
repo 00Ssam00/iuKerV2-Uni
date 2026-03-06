@@ -1,9 +1,11 @@
-import { jest } from '@jest/globals';
-import { AgendamientoCitasCasosUso } from '../../src/core/aplicacion/servicios/agendamientoCitasMedicas/AgendamientoCitasCasosUso.js';
+import { describe, expect, beforeEach, jest, test } from '@jest/globals';
+import { AgendamientoCitasCasosUso } from
+'../../src/core/aplicacion/servicios/agendamientoCitasMedicas/AgendamientoCitasCasosUso.js';
 import { ICitasMedicasRepositorio } from '../../src/core/dominio/citaMedica/ICitasMedicasRepositorio.js';
 import { IMedicosRepositorio } from '../../src/core/dominio/medico/IMedicosRepositorio.js';
 import { IPacientesRepositorio } from '../../src/core/dominio/paciente/IPacientesRepositorio.js';
-import { CitaMedicaRespuestaDTO } from '../../src/core/infraestructura/repositorios/postgres/dtos/CitaMedicaRespuestaDTO.js';
+import { CitaMedicaRespuestaDTO } from
+'../../src/core/infraestructura/repositorios/postgres/dtos/CitaMedicaRespuestaDTO.js';
 import { citaMedicaSolicitudDTO } from '../../src/core/infraestructura/esquemas/citaMedicaEsquema.js';
 import { CodigosDeError } from '../../src/core/dominio/errores/codigosDeError.enum.js';
 
@@ -55,6 +57,7 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
   });
 
   test('Agendamiento de cita exitoso', async () => {
+    // Arrange
     const datosCita: citaMedicaSolicitudDTO = {
       medico: 'MP001',
       tipoDocPaciente: 1,
@@ -97,8 +100,10 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
 
     citasMedicasRepoMock.agendarCita.mockResolvedValue(citaAgendada);
 
+    // Act
     const resultado = await agendamientoCasosUso.ejecutar(datosCita);
 
+    // Assert
     expect(resultado).toEqual(citaAgendada);
     expect(pacientesRepoMock.obtenerPacientePorId).toHaveBeenCalledWith(datosCita.numeroDocPaciente);
     expect(medicosRepoMock.obtenerMedicoPorTarjetaProfesional).toHaveBeenCalledWith(datosCita.medico);
@@ -122,6 +127,7 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
   });
 
   test('Error si el paciente no existe', async () => {
+    // Arrange
     const datosCita: citaMedicaSolicitudDTO = {
       medico: 'MP001',
       tipoDocPaciente: 1,
@@ -134,12 +140,14 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
 
     let errorCapturado: any = null;
 
+    // Act
     try {
       await agendamientoCasosUso.ejecutar(datosCita);
     } catch (error) {
       errorCapturado = error;
     }
 
+    // Assert
     expect(errorCapturado).not.toBeNull();
     expect(errorCapturado.codigoInterno).toBe(CodigosDeError.PACIENTE_NO_EXISTE);
     expect(pacientesRepoMock.obtenerPacientePorId).toHaveBeenCalledWith(datosCita.numeroDocPaciente);
@@ -147,6 +155,7 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
   });
 
   test('Error si el médico no existe', async () => {
+    // Arrange
     const datosCita: citaMedicaSolicitudDTO = {
       medico: 'MED-NO-EXISTE',
       tipoDocPaciente: 1,
@@ -165,12 +174,14 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
 
     let errorCapturado: any = null;
 
+    // Act
     try {
       await agendamientoCasosUso.ejecutar(datosCita);
     } catch (error) {
       errorCapturado = error;
     }
 
+    // Assert
     expect(errorCapturado).not.toBeNull();
     expect(errorCapturado.codigoInterno).toBe(CodigosDeError.MEDICO_NO_EXISTE);
     expect(medicosRepoMock.obtenerMedicoPorTarjetaProfesional).toHaveBeenCalledWith(datosCita.medico);
@@ -178,6 +189,7 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
   });
 
   test('Error si hay turno ocupado del médico (validarTurnoMedico)', async () => {
+    // Arrange
     const datosCita: citaMedicaSolicitudDTO = {
       medico: 'MP001',
       tipoDocPaciente: 1,
@@ -192,12 +204,14 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
 
     let errorCapturado: any = null;
 
+    // Act
     try {
       await agendamientoCasosUso.ejecutar(datosCita);
     } catch (error) {
       errorCapturado = error;
     }
 
+    // Assert
     expect(errorCapturado).not.toBeNull();
     expect(errorCapturado.codigoInterno).toBe(CodigosDeError.MEDICO_NO_DISPONIBLE);
     expect(citasMedicasRepoMock.validarTurnoMedico).toHaveBeenCalledWith(
@@ -209,6 +223,7 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
   });
 
   test('Error si el paciente ya tiene cita en el mismo horario', async () => {
+    // Arrange
     const datosCita: citaMedicaSolicitudDTO = {
       medico: 'MP001',
       tipoDocPaciente: 1,
@@ -225,12 +240,14 @@ describe('Pruebas de Integración para el servicio de Agendamiento Citas Médica
 
     let errorCapturado: any = null;
 
+    // Act
     try {
       await agendamientoCasosUso.ejecutar(datosCita);
     } catch (error) {
       errorCapturado = error;
     }
 
+    // Assert
     expect(errorCapturado).not.toBeNull();
     expect(errorCapturado.codigoInterno).toBe(CodigosDeError.PACIENTE_CON_CITA_EN_MISMO_HORARIO);
     expect(citasMedicasRepoMock.validarCitasPaciente).toHaveBeenCalledWith(
