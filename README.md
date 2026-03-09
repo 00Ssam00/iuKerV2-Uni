@@ -52,7 +52,7 @@ En tu terminal verás la lista de dependencias, deben coincidir con la siguiente
 └── zod@4.1.12
 </pre>
 
-Si coincide, puedes continuar
+Si coincide, puedes continuar.
 Si tuviste algún error, ve a <a href="#erroresDependencias">este link</a>.
 
 ---
