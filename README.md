@@ -136,12 +136,12 @@ node --experimental-vm-modules node_modules/jest/bin/jest.js
 - Si alguna prueba falla, Jest mostrará el mensaje de error, el archivo y el test específico que falló para facilitar la depuración.
 - Revisa los porcentajes de **Statements**, **Branches**, **Functions** y **Lines** para validar que se cumple el objetivo de cobertura definido para el sprint.
 
-<a id="creditos"></a>
+<a id="Creditos"></a>
 # Créditos 🏆
 
 Fork del proyecto original por [Sebastian](https://github.com/Sr4v3), [Israel](https://github.com/isrameve), [Edwin](https://github.com/Edwin-Pena) y [Samuel](https://github.com/00Ssam00).
 
-Mantenedores actuales: [Samuel](https://github.com/00Ssam00), [Alejandro](https://github.com/Tenkazito) y [Yuritza](https://github.com/yuritzamendoza845-glitch).
+Colaboradores actuales: [Samuel](https://github.com/00Ssam00), [Alejandro](https://github.com/Tenkazito) y [Yuritza](https://github.com/yuritzamendoza845-glitch).
 
 
 <a id="erroresDependencias"></a>
