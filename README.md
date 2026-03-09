@@ -9,7 +9,7 @@ Decide donde quieres guardar tu proyecto, dentro de esa carpeta ejecuta desde tu
 
 ### Con SSH
 ```bash
-git clone git@github.com:Inexsu-Coordinadora/iuKer.git
+git clone git@github.com:00Ssam00/iuKerV2-Uni.git
 ```
 
 ### Con HTTPS
