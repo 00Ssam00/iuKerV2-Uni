@@ -1,5 +1,5 @@
 {
-  "name": "iukerUni",
+  "name": "iuker_uni",
   "version": "2.0.0",
   "description": "Sistema de gestión clínica con validaciones y operaciones CRUD",
   "main": "index.js",
