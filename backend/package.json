@@ -1,6 +1,6 @@
 {
-  "name": "iuker",
-  "version": "1.0.0",
+  "name": "iukerUni",
+  "version": "2.0.0",
   "description": "Sistema de gestión clínica con validaciones y operaciones CRUD",
   "main": "index.js",
   "type": "module",
@@ -14,15 +14,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Inexsu-Coordinadora/iuKer.git"
+    "url": "git+https://github.com/00Ssam00/iuKerV2-Uni.git"
   },
   "keywords": [],
   "author": "",
+  "contributors": [
+    {
+      "name": "Samuel Alvarez",
+      "email": "samuel.alvarez009@pascualbravo.edu.co"
+    },
+    {
+      "name": "Alejandro Giraldo"
+    },
+    {
+      "name": "Yuritza Mendoza"
+    }
+  ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Inexsu-Coordinadora/iuKer/issues"
+    "url": "https://github.com/00Ssam00/iuKerV2-Uni/issues"
   },
-  "homepage": "https://github.com/Inexsu-Coordinadora/iuKer#readme",
+  "homepage": "https://github.com/00Ssam00/iuKerV2-Uni#readme",
   "dependencies": {
     "dotenv": "17.2.3",
     "fastify": "^5.8.1",
