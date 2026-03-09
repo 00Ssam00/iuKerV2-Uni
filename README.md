@@ -2,7 +2,7 @@
   <img src="https://github.com/00Ssam00/iuKerV2-Uni/blob/main/documentacion/logos/logoVertical.svg" alt="Logo del proyecto" width="400" height="400">
 </h1>
 
-<a href="#creditos">Creditos</a>.
+<a href="#creditos">Créditos</a>.
 
 ---
 
@@ -136,7 +136,7 @@ node --experimental-vm-modules node_modules/jest/bin/jest.js
 - Si alguna prueba falla, Jest mostrará el mensaje de error, el archivo y el test específico que falló para facilitar la depuración.
 - Revisa los porcentajes de **Statements**, **Branches**, **Functions** y **Lines** para validar que se cumple el objetivo de cobertura definido para el sprint.
 
-<a id="Creditos"></a>
+<a id="creditos"></a>
 # Créditos 🏆
 
 Fork del proyecto original por [Sebastian](https://github.com/Sr4v3), [Israel](https://github.com/isrameve), [Edwin](https://github.com/Edwin-Pena) y [Samuel](https://github.com/00Ssam00).
