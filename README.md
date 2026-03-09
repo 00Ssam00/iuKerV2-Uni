@@ -176,7 +176,7 @@ npm install -D jest@30.2.0
 ```
 ### Supertest
 ```bash
-npm install supertest@7.1.4
+npm install -D supertest@7.1.4
 ```
 ### Ts-jest
 ```bash
