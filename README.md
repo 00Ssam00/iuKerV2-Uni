@@ -6,13 +6,14 @@
 Al clonar el repositorio estás descargando una copia exacta del proyecto desde GitHub a tu computador, para que puedas trabajar y testear localmente en él.
 
 Decide donde quieres guardar tu proyecto, dentro de esa carpeta ejecuta desde tu terminal:
+
+### Con SSH
 ```bash
-SSH
 git clone git@github.com:Inexsu-Coordinadora/iuKer.git
 ```
-Si no usas SSH, puedes usar el siguiente comando con HTTPS:
+
+### Con HTTPS
 ```bash
-HTTPS
 git clone https://github.com/00Ssam00/iuKerV2-Uni.git
 ```
 
@@ -34,7 +35,7 @@ luego de esto, verifica que todas las dependencias se hayan instalado correctame
 npm list
 ```
 
-En tu terminal veras la lista de dependencias, deben coincidir con la siguiente
+En tu terminal verás la lista de dependencias, deben coincidir con la siguiente
 <pre>
 ├── @types/jest@30.0.0
 ├── @types/node@24.9.2
@@ -152,7 +153,7 @@ npm install dotenv@17.2.3
 ```
 ### Fastify
 ```bash
-npm install fastify@5.6.1
+npm install fastify@5.8.1
 ```
 ### pg (postgres)
 ```bash
