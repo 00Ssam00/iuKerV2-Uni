@@ -101,7 +101,7 @@ npm start
 
 ## 7️⃣ Ejecuta los tests automatizados
 
-En este proyecto se configuraron pruebas unitarias y de integración usando Jest y Supertest, ejecutadas con Node en modo `--experimental-vm-modules` para soportar módulos ES (ES: EcmaScript).
+En este proyecto se configuraron pruebas unitarias y de integración usando Jest y Supertest, ejecutadas con Node en modo `--experimental-vm-modules` para soportar módulos ES (ES: ECMAScript).
 Los scripts de prueba están definidos en el archivo `package.json`, por lo que puedes ejecutarlos directamente con `npm test`.
 
 ### 7.1 Requisitos previos para los tests
