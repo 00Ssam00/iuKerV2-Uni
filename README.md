@@ -3,14 +3,20 @@
 </h1>
 
 ## 1️⃣ Clonar el repositorio
-Al clonar el repositorio estas descargando una copia exacta del proyecto desde GitHub a tu computador, para que puedas trabajar y testear localmente en él.
+Al clonar el repositorio estás descargando una copia exacta del proyecto desde GitHub a tu computador, para que puedas trabajar y testear localmente en él.
 
 Decide donde quieres guardar tu proyecto, dentro de esa carpeta ejecuta desde tu terminal:
-```
+```bash
+SSH
 git clone git@github.com:Inexsu-Coordinadora/iuKer.git
 ```
+Si no usas SSH, puedes usar el siguiente comando con HTTPS:
+```bash
+HTTPS
+git clone https://github.com/00Ssam00/iuKerV2-Uni.git
+```
 
-Esto creara una carpeta que incluira todos los archivos necesarios para iniciar
+Esto creará una carpeta que incluirá todos los archivos necesarios para iniciar
 
 ---
 
@@ -28,14 +34,14 @@ luego de esto, verifica que todas las dependencias se hayan instalado correctame
 npm list
 ```
 
-En tu terminal veras la lista de dependencias, deben coinicidir con la siguiente
+En tu terminal veras la lista de dependencias, deben coincidir con la siguiente
 <pre>
 ├── @types/jest@30.0.0
 ├── @types/node@24.9.2
 ├── @types/pg@8.15.6
 ├── @types/supertest@6.0.3
 ├── dotenv@17.2.3
-├── fastify@5.6.1
+├── fastify@5.8.1
 ├── jest@30.2.0
 ├── pg@8.16.3
 ├── supertest@7.1.4
@@ -45,7 +51,7 @@ En tu terminal veras la lista de dependencias, deben coinicidir con la siguiente
 └── zod@4.1.12
 </pre>
 
-Si coinicide, puedes continuar
+Si coincide, puedes continuar
 Si tuviste algún error, ve a <a href="#erroresDependencias">este link</a>.
 
 ---
@@ -94,7 +100,7 @@ npm start
 
 ## 7️⃣ Ejecuta los tests automatizados
 
-En este proyecto se configuraron pruebas unitarias y de integración usando Jest y Supertest, ejecutadas con Node en modo `--experimental-vm-modules` para soportar módulos ES.  
+En este proyecto se configuraron pruebas unitarias y de integración usando Jest y Supertest, ejecutadas con Node en modo `--experimental-vm-modules` para soportar módulos ES (ES: EcmaScript).
 Los scripts de prueba están definidos en el archivo `package.json`, por lo que puedes ejecutarlos directamente con `npm test`.
 
 ### 7.1 Requisitos previos para los tests
@@ -163,4 +169,16 @@ npm install -D typescript@5.9.3
 ### Zod
 ```bash
 npm install zod@4.1.12
+```
+### Jest
+```bash
+npm install -D jest@30.2.0
+```
+### Supertest
+```bash
+npm install supertest@7.1.4
+```
+### Ts-jest
+```bash
+npm install -D ts-jest@29.4.5
 ```
