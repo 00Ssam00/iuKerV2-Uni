@@ -26,4 +26,11 @@ export const variablesEntornoEsquema = z.object({
     PGDBNAME: z
         .string()
         .min(1, {message: 'Se debe indicar el nombre de la Base de Datos Postgres'}),
+    FRONTEND_URL: z
+        .string()
+        .url()
+        .default('http://localhost:5173'),
+    NODE_ENV: z
+        .enum(['development', 'production'])
+        .default('development'),
 });
