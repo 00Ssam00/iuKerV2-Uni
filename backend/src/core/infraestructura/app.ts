@@ -13,9 +13,12 @@ export const app = Fastify({ logger: true });
 
 // Registrar CORS
 const corsConfig = {
-  origin: configuracion.nodeEnv === 'development' 
-    ? true 
+  origin: configuracion.nodeEnv === 'development'
+    ? true
     : configuracion.frontendUrl,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 
 app.register(cors, corsConfig);
