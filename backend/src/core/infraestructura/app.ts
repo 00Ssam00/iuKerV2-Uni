@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { FastifyError } from 'fastify';
+import cors from '@fastify/cors';
 import { configuracion } from '../../common/configuracion.js';
 import { construirCitasEnrutador } from './rutas/citasMedicasEnrutador.js';
 import { construirPacientesEnrutador } from './rutas/pacientesEnrutador.js';
@@ -9,6 +10,18 @@ import { construirAsignacionesEnrutador } from '../infraestructura/rutas/asignac
 import { manejadorGlobalDeErrores } from './controladores/manejoGlobalDeErrores.js';
 
 export const app = Fastify({ logger: true });
+
+// Registrar CORS
+const corsConfig = {
+  origin: configuracion.nodeEnv === 'development'
+    ? true
+    : configuracion.frontendUrl,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+app.register(cors, corsConfig);
 
 // Traducción de ErrorDeAplicacion a respuestas HTTP.
 app.setErrorHandler(manejadorGlobalDeErrores);
