@@ -7,3 +7,5 @@ dist/
 coverage/
 .af
 *.af
+CLAUDE.md
+.claude/
