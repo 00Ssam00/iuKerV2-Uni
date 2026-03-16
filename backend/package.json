@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/00Ssam00/iuKerV2-Uni#readme",
   "dependencies": {
+    "@fastify/cors": "^11.2.0",
     "dotenv": "17.2.3",
     "fastify": "^5.8.1",
     "pg": "8.16.3",

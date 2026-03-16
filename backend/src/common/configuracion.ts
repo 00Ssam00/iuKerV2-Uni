@@ -13,6 +13,8 @@ if(!variablesEntornoValidadas.success){
 
 export const configuracion = {
   httpPuerto: variablesEntornoValidadas.data.PUERTO,
+  nodeEnv: variablesEntornoValidadas.data.NODE_ENV,
+  frontendUrl: variablesEntornoValidadas.data.FRONTEND_URL,
   baseDatos: {
     host: variablesEntornoValidadas.data.PGHOST,
     puerto: variablesEntornoValidadas.data.PGPORT,
