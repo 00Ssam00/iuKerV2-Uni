@@ -145,7 +145,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, title, primaryColor }) =
       tipoDocPaciente: tipoDocMap[cita.tipoDocPaciente] || '1',
       numeroDocPaciente: cita.numeroDocPaciente,
       fecha: cita.fecha.split('T')[0], // Formatear fecha para input type="date"
-      horaInicio: cita.horaInicio,
+      horaInicio: cita.horaInicio.substring(0, 5),
     });
 
     setShowModal(true);
@@ -237,7 +237,10 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, title, primaryColor }) =
       await fetchAllCitas();
     } catch (err) {
       console.error('Error al procesar la cita:', err);
-      alert(`Error al ${isEditing ? 'reagendar' : 'agendar'} la cita`);
+      const mensaje = axios.isAxiosError(err)
+        ? err.response?.data?.mensaje ?? `Error al ${isEditing ? 'reagendar' : 'agendar'} la cita`
+        : `Error al ${isEditing ? 'reagendar' : 'agendar'} la cita`;
+      alert(mensaje);
     }
   };
 
