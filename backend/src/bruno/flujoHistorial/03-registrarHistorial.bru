@@ -1,0 +1,19 @@
+meta {
+  name: 03 - Registrar historial
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://127.0.0.1:3001/api/historial-paciente
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idCita": "reemplazar-con-idCita-del-paso-2",
+    "diagnostico": "Hipertensión arterial grado 1",
+    "descripcion": "Paciente presenta valores de presión elevados de forma sostenida. Se recomienda control mensual."
+  }
+}

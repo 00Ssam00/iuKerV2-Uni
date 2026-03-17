@@ -1,0 +1,19 @@
+meta {
+  name: errorHistorialYaExiste
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://127.0.0.1:3001/api/historial-paciente
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idCita": "f9ad42c5-877c-4841-ab95-9d19f7684dd4",
+    "diagnostico": "Intento de registrar un segundo historial",
+    "descripcion": "Ya existe historial para esta cita"
+  }
+}

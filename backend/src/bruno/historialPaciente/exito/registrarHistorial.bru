@@ -1,0 +1,19 @@
+meta {
+  name: exitoRegistrarHistorial
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:3001/api/historial-paciente
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idCita": "reemplazar-con-uuid-de-cita-finalizada",
+    "diagnostico": "Hipertensión arterial grado 1",
+    "descripcion": "Paciente Juan Pérez presenta valores de presión elevados de forma sostenida. Se recomienda control mensual."
+  }
+}
