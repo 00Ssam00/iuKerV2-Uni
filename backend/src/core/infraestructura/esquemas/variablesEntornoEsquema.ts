@@ -31,6 +31,6 @@ export const variablesEntornoEsquema = z.object({
         .url()
         .default('http://localhost:5173'),
     NODE_ENV: z
-        .enum(['development', 'production'])
+        .enum(['development', 'production', 'test'])
         .default('development'),
 });
