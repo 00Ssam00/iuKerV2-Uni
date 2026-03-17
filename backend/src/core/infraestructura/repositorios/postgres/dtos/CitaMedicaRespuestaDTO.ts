@@ -4,6 +4,7 @@ export interface CitaMedicaRespuestaDTO {
   tipoDocPaciente: string;
   numeroDocPaciente: string;
   medico: string;
+  medicoTarjeta: string;
   ubicacion: string;
   consultorio: string;
   fecha: string;

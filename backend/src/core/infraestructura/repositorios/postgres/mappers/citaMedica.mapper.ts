@@ -6,6 +6,7 @@ export interface CitaMedicaFila {
   tipoDocPaciente: string;
   numeroDocPaciente: string;
   medico: string;
+  medicoTarjeta: string;
   ubicacion: string;
   consultorio: string;
   fecha: string;
@@ -22,6 +23,7 @@ export function mapFilaCitaMedica(fila: CitaMedicaFila): CitaMedicaRespuestaDTO 
     tipoDocPaciente: fila.tipoDocPaciente,
     numeroDocPaciente: fila.numeroDocPaciente,
     medico: fila.medico,
+    medicoTarjeta: fila.medicoTarjeta,
     ubicacion: fila.ubicacion,
     consultorio: fila.consultorio,
     fecha: fila.fecha,

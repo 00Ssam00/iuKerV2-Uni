@@ -1,0 +1,19 @@
+meta {
+  name: errorCitaNoExiste
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://127.0.0.1:3001/api/historial-paciente
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idCita": "00000000-0000-0000-0000-000000000000",
+    "diagnostico": "Diagnóstico de prueba",
+    "descripcion": "La cita con este UUID no existe"
+  }
+}
