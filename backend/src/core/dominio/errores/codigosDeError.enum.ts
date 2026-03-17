@@ -22,6 +22,11 @@ export enum CodigosDeError {
   CONCULTORIO_YA_EXISTE = 'CONS002',
   CONSULTORIO_OCUPADO = 'CONS003', //Ocupado en ese rango de tiempo
 
+  // Errores de Historial del Paciente - [HIST]
+  HISTORIAL_NO_EXISTE = 'HIST001',
+  CITA_NO_FINALIZADA_PARA_HISTORIAL = 'HIST002',
+  HISTORIAL_YA_EXISTE = 'HIST003',
+
   // Errores Generales/Validación de Entrada - [GEN]
   PARAMETROS_INVALIDOS = 'GEN001',
 }

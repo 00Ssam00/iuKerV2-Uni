@@ -18,6 +18,7 @@ export class CitasMedicasRepositorio implements ICitasMedicasRepositorio {
       td.descripcion AS "tipoDocPaciente",
       c.numero_doc_paciente AS "numeroDocPaciente",
       (m.nombre || ' ' || COALESCE (m.apellido, '')) AS medico,
+      m.tarjeta_profesional AS "medicoTarjeta",
       co.ubicacion,
       co.id_consultorio AS consultorio,
       c.fecha,

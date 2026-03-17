@@ -70,4 +70,12 @@ CREATE TABLE IF NOT EXISTS citas_medicas (
   FOREIGN KEY (tipo_doc_paciente, numero_doc_paciente) REFERENCES pacientes(tipo_doc, numero_doc)
 );
 
+CREATE TABLE IF NOT EXISTS historial_paciente (
+  id_historial   UUID          PRIMARY KEY DEFAULT public.uuid_generate_v4(),
+  id_cita        UUID          NOT NULL UNIQUE REFERENCES citas_medicas(id_cita),
+  diagnostico    VARCHAR(500)  NOT NULL,
+  descripcion    VARCHAR(1000),
+  fecha_registro TIMESTAMP     DEFAULT NOW()
+);
+
 ALTER DATABASE iukerdb SET search_path TO iuker;

@@ -9,6 +9,6 @@ export const pool = new Pool({
   password: configuracion.baseDatos.contrasena,
 });
 
-export async function ejecutarConsulta(consulta: string, parametros?: Array<number | string | Date>) {
+export async function ejecutarConsulta(consulta: string, parametros?: Array<number | string | Date | null>) {
   return await pool.query(consulta, parametros);
 }

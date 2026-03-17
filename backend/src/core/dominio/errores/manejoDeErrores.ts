@@ -14,7 +14,7 @@ const MAPA_ERRORES = {
   },
   [CodigosDeError.CITA_FINALIZADA]: {
     estado: EstadoHttp.CONFLICTO,
-    mensaje: 'La cita está en estado: Finalizada',
+    mensaje: 'No se puede realizar esta acción: la cita ya se encuentra en estado Finalizada',
   },
   [CodigosDeError.CITA_REPROGRAMADA]: {
     estado: EstadoHttp.CONFLICTO,
@@ -66,6 +66,19 @@ const MAPA_ERRORES = {
   [CodigosDeError.CONSULTORIO_OCUPADO]: {
     estado: EstadoHttp.CONFLICTO,
     mensaje: 'El consultorio está ocupado en ese rango de tiempo',
+  },
+  //Errores de historial
+  [CodigosDeError.HISTORIAL_NO_EXISTE]: {
+    estado: EstadoHttp.NO_ENCONTRADO,
+    mensaje: 'El historial solicitado no existe en el sistema',
+  },
+  [CodigosDeError.CITA_NO_FINALIZADA_PARA_HISTORIAL]: {
+    estado: EstadoHttp.CONFLICTO,
+    mensaje: 'Solo se puede registrar historial para citas en estado Finalizada',
+  },
+  [CodigosDeError.HISTORIAL_YA_EXISTE]: {
+    estado: EstadoHttp.CONFLICTO,
+    mensaje: 'Ya existe un historial registrado para esta cita',
   },
   [CodigosDeError.PARAMETROS_INVALIDOS]: {
     estado: EstadoHttp.PETICION_INVALIDA,
