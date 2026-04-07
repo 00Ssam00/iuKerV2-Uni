@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import type { CitaMedica, CitasApiResponse } from '../types/index';
+import type { CitaMedica, CitasApiResponse, CitasAgrupadas } from '../types/index';
 
 interface UseCitasMedicasResult {
   data: CitaMedica[];
@@ -86,4 +86,95 @@ export const useCitasMedicas = (baseUrl: string, initialSearch?: string): UseCit
   }, []);
 
   return { data, loading, error, buscar, recargar: fetchAll };
+};
+
+export const agruparPorFecha = (citas: CitaMedica[]): CitasAgrupadas => {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const manana = new Date(hoy);
+  manana.setDate(manana.getDate() + 1);
+
+  const proximaSemana = new Date(hoy);
+  proximaSemana.setDate(proximaSemana.getDate() + 8);
+
+  const finMes = new Date(hoy);
+  finMes.setMonth(finMes.getMonth() + 1);
+  finMes.setDate(0);
+
+  const grupos: CitasAgrupadas = {
+    'Hoy': [],
+    'Esta semana': [],
+    'Este mes': [],
+    'Pasadas': []
+  };
+
+  citas.forEach(cita => {
+    const fechaCita = new Date(cita.fecha);
+    fechaCita.setHours(0, 0, 0, 0);
+
+    if (fechaCita.getTime() === hoy.getTime()) {
+      grupos['Hoy'].push(cita);
+    } else if (fechaCita > hoy && fechaCita < proximaSemana) {
+      grupos['Esta semana'].push(cita);
+    } else if (fechaCita >= proximaSemana && fechaCita <= finMes) {
+      grupos['Este mes'].push(cita);
+    } else if (fechaCita < hoy) {
+      grupos['Pasadas'].push(cita);
+    }
+  });
+
+  // Filtrar grupos vacíos y ordenar por fecha dentro de cada grupo
+  const resultado: CitasAgrupadas = {};
+  Object.entries(grupos).forEach(([key, value]) => {
+    if (value.length > 0) {
+      resultado[key] = value.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    }
+  });
+
+  return resultado;
+};
+
+export const agruparPorEstado = (citas: CitaMedica[]): CitasAgrupadas => {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const grupos: CitasAgrupadas = {
+    'Próximas': [],
+    'Reprogramadas': [],
+    'Finalizadas': [],
+    'Canceladas': []
+  };
+
+  citas.forEach(cita => {
+    const fechaCita = new Date(cita.fecha);
+    fechaCita.setHours(0, 0, 0, 0);
+
+    // Próximas: estado Activa y fecha >= hoy
+    if (cita.codigoEstadoCita === 1 && fechaCita >= hoy) {
+      grupos['Próximas'].push(cita);
+    }
+    // Reprogramadas: estado 3
+    else if (cita.codigoEstadoCita === 3) {
+      grupos['Reprogramadas'].push(cita);
+    }
+    // Finalizadas: estado 4
+    else if (cita.codigoEstadoCita === 4) {
+      grupos['Finalizadas'].push(cita);
+    }
+    // Canceladas: estado 5
+    else if (cita.codigoEstadoCita === 5) {
+      grupos['Canceladas'].push(cita);
+    }
+  });
+
+  // Filtrar grupos vacíos y ordenar por fecha dentro de cada grupo
+  const resultado: CitasAgrupadas = {};
+  Object.entries(grupos).forEach(([key, value]) => {
+    if (value.length > 0) {
+      resultado[key] = value.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    }
+  });
+
+  return resultado;
 };
