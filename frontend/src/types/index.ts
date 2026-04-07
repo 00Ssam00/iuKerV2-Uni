@@ -21,12 +21,77 @@ export interface CitasApiResponse {
 
 export interface Medico {
   tarjetaProfesional: string;
+  tipoDoc: number;
+  numeroDoc: string;
   nombre: string;
   apellido: string;
+  fechaNacimiento: string;
+  sexo: string;
+  especialidad: string;
+  email: string;
+  telefono: string;
+}
+
+export interface MedicoDTO {
+  tarjetaProfesional: string;
+  tipoDoc: number;
+  numeroDoc: string;
+  nombre: string;
+  apellido: string;
+  fechaNacimiento: string;
+  sexo: string;
+  especialidad: string;
+  email: string;
+  telefono: string;
 }
 
 export interface MedicosApiResponse {
   medicos: Medico[];
+  cantidad?: number;
+}
+
+export interface Paciente {
+  numeroDoc: string;
+  tipoDoc: number;
+  nombre: string;
+  apellido: string;
+  fechaNacimiento: string;
+  sexo: string;
+  email: string;
+  telefono: string;
+  direccion: string;
+}
+
+export interface PacienteDTO {
+  numeroDoc: string;
+  tipoDoc: number;
+  nombre: string;
+  apellido: string;
+  fechaNacimiento: string;
+  sexo: string;
+  email: string;
+  telefono: string;
+  direccion: string;
+}
+
+export interface PacientesApiResponse {
+  pacientes: Paciente[];
+  cantidadPacientesObtenidos?: number;
+}
+
+export interface Consultorio {
+  idConsultorio: string;
+  ubicacion: string | null;
+}
+
+export interface ConsultorioDTO {
+  idConsultorio: string;
+  ubicacion?: string | null;
+}
+
+export interface ConsultoriosApiResponse {
+  consultoriosEncontrados: Consultorio[];
+  cantidadConsultoriosEncontrados?: number;
 }
 
 export interface HistorialEntry {
@@ -57,4 +122,20 @@ export interface HistorialFormData {
   idCita: string;
   diagnostico: string;
   descripcion: string;
+}
+
+export interface Asignacion {
+  tarjetaProfesional: string;
+  idConsultorio: string;
+  diaSemana: number;
+  inicioJornada: string;
+  finJornada: string;
+}
+
+export interface AsignacionDTO {
+  tarjetaProfesionalMedico: string;
+  idConsultorio: string;
+  diaSemana: number;
+  inicioJornada: string;
+  finJornada: string;
 }

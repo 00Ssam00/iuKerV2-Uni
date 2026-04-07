@@ -30,6 +30,15 @@ const Navbar: React.FC<NavbarProps> = ({ activePage, primaryColor = '#2563EB', o
         >
           Historial
         </button>
+        <button
+          onClick={() => activePage !== 'gestion' && onNavigate('gestion')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+            activePage === 'gestion' ? 'text-white' : 'text-slate-600 hover:bg-slate-100'
+          }`}
+          style={activePage === 'gestion' ? { backgroundColor: primaryColor } : undefined}
+        >
+          Gestión
+        </button>
       </nav>
     </div>
   </header>
