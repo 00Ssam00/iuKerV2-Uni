@@ -9,6 +9,21 @@ import { EstadoHttp } from './estadoHttp.enum.js';
 export class AsignacionesControlador {
   constructor(private asignacionCasosUso: IAsignacionCasosUso) {}
 
+  obtenerAsignaciones = async (
+    request: FastifyRequest,
+    reply: FastifyReply
+  ) => {
+    try {
+      const asignaciones = await this.asignacionCasosUso.obtenerTodasLasAsignaciones();
+
+      return reply.code(EstadoHttp.OK).send({
+        asignaciones: asignaciones,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
   crearAsignacion = async (
     request: FastifyRequest<{ Body: AsignacionSolicitudDTO }>,
     reply: FastifyReply

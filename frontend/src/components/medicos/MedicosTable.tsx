@@ -72,6 +72,7 @@ const MedicosTable: React.FC<MedicosTableProps> = ({
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Tarjeta Prof.</th>
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Nombre</th>
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Especialidad</th>
+              <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Horario</th>
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Email</th>
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Teléfono</th>
               <th className='px-6 py-3.5 text-center text-xs font-semibold text-slate-600 uppercase'>Acciones</th>
@@ -85,6 +86,7 @@ const MedicosTable: React.FC<MedicosTableProps> = ({
                   {medico.nombre} {medico.apellido}
                 </td>
                 <td className='px-6 py-4 text-sm text-slate-600'>{medico.especialidad}</td>
+                <td className='px-6 py-4 text-sm text-slate-600'>{medico.horario || 'Sin asignar'}</td>
                 <td className='px-6 py-4 text-sm text-slate-600'>{medico.email}</td>
                 <td className='px-6 py-4 text-sm text-slate-600'>{medico.telefono}</td>
                 <td className='px-6 py-4 text-center'>

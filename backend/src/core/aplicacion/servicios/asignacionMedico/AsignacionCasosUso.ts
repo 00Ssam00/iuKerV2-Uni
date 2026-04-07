@@ -72,4 +72,8 @@ export class AsignacionCasosUso implements IAsignacionCasosUso {
       tarjetaProfesionalMedico
     );
   }
+
+  async obtenerTodasLasAsignaciones(): Promise<IAsignacionMedico[]> {
+    return await this.asignacionMedicoRepositorio.obtenerTodasLasAsignaciones();
+  }
 }

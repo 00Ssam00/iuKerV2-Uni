@@ -30,6 +30,7 @@ export interface Medico {
   especialidad: string;
   email: string;
   telefono: string;
+  horario?: string;
 }
 
 export interface MedicoDTO {
@@ -122,6 +123,10 @@ export interface HistorialFormData {
   idCita: string;
   diagnostico: string;
   descripcion: string;
+}
+
+export interface CitasAgrupadas {
+  [grupo: string]: CitaMedica[];
 }
 
 export interface Asignacion {

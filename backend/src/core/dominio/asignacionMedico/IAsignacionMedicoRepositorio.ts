@@ -22,4 +22,6 @@ export interface IAsignacionMedicoRepositorio {
   ): Promise<boolean>;
 
   eliminarAsignacion(tarjetaProfesionalMedico: string): Promise<void>;
+
+  obtenerTodasLasAsignaciones(): Promise<IAsignacionMedico[]>;
 }

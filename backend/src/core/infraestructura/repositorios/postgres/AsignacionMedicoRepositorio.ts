@@ -90,4 +90,17 @@ export class AsignacionMedicoRepositorio
 
     await ejecutarConsulta(query, [parametros]);
   }
+
+  async obtenerTodasLasAsignaciones(): Promise<IAsignacionMedico[]> {
+    const query = 'SELECT * FROM asignacion_medicos ORDER BY tarjeta_profesional_medico';
+    const result = await ejecutarConsulta(query, []);
+
+    return result.rows.map((row: any) => ({
+      tarjetaProfesional: row.tarjeta_profesional_medico,
+      idConsultorio: row.id_consultorio,
+      diaSemana: row.dia_semana,
+      inicioJornada: row.inicio_jornada,
+      finJornada: row.fin_jornada,
+    }));
+  }
 }
