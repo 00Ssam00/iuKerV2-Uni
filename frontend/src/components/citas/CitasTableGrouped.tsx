@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, X, Check, Copy, MoreVertical, ChevronDown } from 'lucide-react';
-import type { CitaMedica, CitasAgrupadas } from '../../types/index';
+import type { CitaMedica, CitasAgrupadas, Asignacion } from '../../types/index';
 import { formatDateShort, formatTime } from '../../utils/formatters';
 import EstadoBadge from '../shared/EstadoBadge';
 import CitaActionMenu from './CitaActionMenu';
@@ -13,6 +13,7 @@ interface CitasTableGroupedProps {
   primaryColor: string;
   baseUrl: string;
   viewMode: 'fecha' | 'estado';
+  asignaciones?: Asignacion[];
   onVerHistorial: (idCita: string) => void;
   onReagendar: (cita: CitaMedica) => void;
   onSuccess: () => void;
@@ -20,7 +21,7 @@ interface CitasTableGroupedProps {
 }
 
 const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
-  data, loading, error, primaryColor, baseUrl, viewMode, onVerHistorial, onReagendar, onSuccess, onRetry,
+  data, loading, error, primaryColor, baseUrl, viewMode, asignaciones, onVerHistorial, onReagendar, onSuccess, onRetry,
 }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
@@ -28,6 +29,12 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const citasAgrupadas: CitasAgrupadas = viewMode === 'fecha' ? agruparPorFecha(data) : agruparPorEstado(data);
+
+  const getConsultorioDeCita = (cita: CitaMedica) => {
+    if (!asignaciones || asignaciones.length === 0) return '—';
+    const asignacion = asignaciones.find(a => a.tarjetaProfesional === cita.medico);
+    return asignacion?.idConsultorio ?? '—';
+  };
 
   const toggleMenu = (citaId: string, e: React.MouseEvent<HTMLButtonElement>) => {
     if (openMenuId === citaId) {
@@ -159,7 +166,7 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
                         <td className='px-5 py-3.5 text-slate-500'>{cita.tipoDocPaciente}</td>
                         <td className='px-5 py-3.5 text-slate-500'>{cita.numeroDocPaciente}</td>
                         <td className='px-5 py-3.5 text-slate-700'>{cita.medico}</td>
-                        <td className='px-5 py-3.5 text-slate-500'>{cita.consultorio || '—'}</td>
+                        <td className='px-5 py-3.5 text-slate-500'>{getConsultorioDeCita(cita)}</td>
                         <td className='px-5 py-3.5 text-slate-600'>{formatDateShort(cita.fecha)}</td>
                         <td className='px-5 py-3.5 text-slate-600 tabular-nums'>{formatTime(cita.horaInicio)}</td>
                         <td className='px-5 py-3.5'>

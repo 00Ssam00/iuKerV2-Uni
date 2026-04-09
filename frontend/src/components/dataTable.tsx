@@ -3,6 +3,7 @@ import { Calendar, TrendingUp } from 'lucide-react';
 import type { Pagina, NavParams } from '../App';
 import type { CitaMedica } from '../types/index';
 import { useCitasMedicas } from '../hooks/useCitasMedicas';
+import { useAsignaciones } from '../hooks/useAsignaciones';
 import Navbar from './shared/Navbar';
 import SearchBarCitas from './citas/SearchBarCitas';
 import CitasTable from './citas/CitasTable';
@@ -19,6 +20,7 @@ interface DataTableProps {
 
 const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate, initialSearch }) => {
   const { data, loading, error, buscar, recargar } = useCitasMedicas(baseUrl, initialSearch);
+  const { data: asignaciones } = useAsignaciones();
   const [citaEditando, setCitaEditando] = useState<CitaMedica | null | 'nueva'>(null);
   const [idCitaHistorial, setIdCitaHistorial] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'normal' | 'fecha' | 'estado'>('normal');
@@ -86,6 +88,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
             error={error}
             primaryColor={primaryColor}
             baseUrl={baseUrl}
+            asignaciones={asignaciones}
             onVerHistorial={setIdCitaHistorial}
             onReagendar={setCitaEditando}
             onSuccess={recargar}
@@ -99,6 +102,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
             primaryColor={primaryColor}
             baseUrl={baseUrl}
             viewMode={viewMode as 'fecha' | 'estado'}
+            asignaciones={asignaciones}
             onVerHistorial={setIdCitaHistorial}
             onReagendar={setCitaEditando}
             onSuccess={recargar}
