@@ -60,6 +60,16 @@ export class AsignacionMedicoRepositorio
     return result.rows.length > 0;
   }
 
+  async medicoYaTieneAsignacion(tarjetaProfesionalMedico: string): Promise<boolean> {
+    const query =
+      'SELECT 1 FROM asignacion_medicos ' +
+      'WHERE tarjeta_profesional_medico = $1 LIMIT 1';
+
+    const result = await ejecutarConsulta(query, [tarjetaProfesionalMedico]);
+
+    return result.rows.length > 0;
+  }
+
   async crearAsignacion(
     nuevaAsignacion: IAsignacionMedico
   ): Promise<AsignacionIdRespuestaDTO> {

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { MoreVertical, Edit, Trash, Link } from 'lucide-react';
-import type { Consultorio } from '../../types/index';
+import type { Consultorio, Asignacion, Medico } from '../../types/index';
 
 interface ConsultoriosTableProps {
   data: Consultorio[];
   loading: boolean;
   error: string | null;
   primaryColor: string;
+  asignaciones?: Asignacion[];
+  medicos?: Medico[];
   onEditar?: (consultorio: Consultorio) => void;
   onEliminar?: (id: string) => void;
   onAsignar?: (consultorio: Consultorio) => void;
@@ -18,12 +20,22 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
   loading,
   error,
   primaryColor,
+  asignaciones = [],
+  medicos = [],
   onEditar,
   onEliminar,
   onAsignar,
   onRetry,
 }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  const getMedicoAsignado = (consultorioId: string) => {
+    const asignacion = asignaciones.find(a => a.idConsultorio === consultorioId);
+    if (!asignacion) return 'Sin asignar';
+
+    const medico = medicos.find(m => m.tarjetaProfesional === asignacion.tarjetaProfesional);
+    return medico ? `${medico.tarjetaProfesional} - ${medico.especialidad}` : 'Sin asignar';
+  };
 
   if (loading) {
     return (
@@ -73,6 +85,7 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
             <tr>
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>ID</th>
               <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Ubicación</th>
+              <th className='px-6 py-3.5 text-left text-xs font-semibold text-slate-600 uppercase'>Médico Asignado</th>
               <th className='px-6 py-3.5 text-center text-xs font-semibold text-slate-600 uppercase'>Acciones</th>
             </tr>
           </thead>
@@ -81,6 +94,13 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
               <tr key={consultorio.idConsultorio} className='hover:bg-slate-50 transition-colors'>
                 <td className='px-6 py-4 text-sm text-slate-700 font-medium'>{consultorio.idConsultorio}</td>
                 <td className='px-6 py-4 text-sm text-slate-600'>{consultorio.ubicacion || '—'}</td>
+                <td className='px-6 py-4 text-sm'>
+                  {getMedicoAsignado(consultorio.idConsultorio) === 'Sin asignar' ? (
+                    <span className='text-slate-400'>Sin asignar</span>
+                  ) : (
+                    <span className='text-slate-700 font-medium'>{getMedicoAsignado(consultorio.idConsultorio)}</span>
+                  )}
+                </td>
                 <td className='px-6 py-4 text-center'>
                   <button
                     onClick={() => (openMenuId === consultorio.idConsultorio ? setOpenMenuId(null) : setOpenMenuId(consultorio.idConsultorio))}

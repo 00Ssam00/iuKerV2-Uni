@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import type { Medico, Consultorio } from '../../types/index';
+import type { Medico, Consultorio, Asignacion } from '../../types/index';
 import { useAsignaciones } from '../../hooks/useAsignaciones';
 
 interface AsignacionFormModalProps {
   consultorio: Consultorio | null;
   medicosDisponibles: Medico[];
+  asignaciones?: Asignacion[];
   primaryColor: string;
   onSuccess: () => void;
   onClose: () => void;
@@ -14,6 +15,7 @@ interface AsignacionFormModalProps {
 const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
   consultorio,
   medicosDisponibles,
+  asignaciones = [],
   primaryColor,
   onSuccess,
   onClose,
@@ -21,6 +23,12 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
   const [selectedMedico, setSelectedMedico] = useState('');
   const { crearAsignacion } = useAsignaciones();
   const [loading, setLoading] = useState(false);
+
+  // Filtrar médicos que YA están asignados
+  const medicosNoAsignados = medicosDisponibles.filter(medico => {
+    const yaAsignado = asignaciones.some(a => a.tarjetaProfesional === medico.tarjetaProfesional);
+    return !yaAsignado;
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,11 +75,15 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
               className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:bg-white transition-all disabled:opacity-50'
             >
               <option value=''>Selecciona un médico...</option>
-              {medicosDisponibles.map(medico => (
-                <option key={medico.tarjetaProfesional} value={medico.tarjetaProfesional}>
-                  {medico.nombre} {medico.apellido} ({medico.especialidad})
-                </option>
-              ))}
+              {medicosNoAsignados.length === 0 ? (
+                <option disabled>Todos los médicos ya están asignados</option>
+              ) : (
+                medicosNoAsignados.map(medico => (
+                  <option key={medico.tarjetaProfesional} value={medico.tarjetaProfesional}>
+                    {medico.nombre} {medico.apellido} ({medico.especialidad})
+                  </option>
+                ))
+              )}
             </select>
           </div>
 

@@ -4,6 +4,7 @@ import type { Consultorio } from '../types/index';
 import { usePacientes } from '../hooks/usePacientes';
 import { useMedicos } from '../hooks/useMedicos';
 import { useConsultorios } from '../hooks/useConsultorios';
+import { useAsignaciones } from '../hooks/useAsignaciones';
 import Navbar from '../components/shared/Navbar';
 import SearchBarMedicos from '../components/medicos/SearchBarMedicos';
 import MedicosTable from '../components/medicos/MedicosTable';
@@ -32,6 +33,7 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'medicos' }) 
 
   const medicos = useMedicos();
   const consultorios = useConsultorios();
+  const { data: asignaciones } = useAsignaciones();
   const { showToast } = useToast();
 
   const primaryColor = '#2563EB';
@@ -140,6 +142,8 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'medicos' }) 
               loading={consultorios.loading}
               error={consultorios.error}
               primaryColor={primaryColor}
+              asignaciones={asignaciones}
+              medicos={medicos.data}
               onEditar={c => {
                 setConsultorioEditando(c);
                 setShowConsultorioModal(true);
@@ -181,6 +185,7 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'medicos' }) 
         <AsignacionFormModal
           consultorio={consultorioParaAsignar}
           medicosDisponibles={medicos.data}
+          asignaciones={asignaciones}
           primaryColor={primaryColor}
           onSuccess={() => {
             consultorios.recargar();
