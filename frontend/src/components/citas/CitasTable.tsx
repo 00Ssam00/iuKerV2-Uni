@@ -27,7 +27,7 @@ const CitasTable: React.FC<CitasTableProps> = ({
 
   const getConsultorioDeCita = (cita: CitaMedica) => {
     if (!asignaciones || asignaciones.length === 0) return '—';
-    const asignacion = asignaciones.find(a => a.tarjetaProfesional === cita.medico);
+    const asignacion = asignaciones.find(a => a.tarjetaProfesional === cita.medicoTarjeta);
     return asignacion?.idConsultorio ?? '—';
   };
 

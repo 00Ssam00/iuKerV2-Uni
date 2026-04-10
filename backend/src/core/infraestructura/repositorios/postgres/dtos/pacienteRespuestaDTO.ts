@@ -1,6 +1,6 @@
 export interface pacienteRespuestaDTO {
-  tipoDocPaciente: number;
-  numeroDocPaciente: string;
+  tipoDoc: number;
+  numeroDoc: string;
   nombre: string;
   apellido: string;
   fechaNacimiento: string;

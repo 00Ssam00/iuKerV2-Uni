@@ -23,7 +23,7 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
   const [selectedMedico, setSelectedMedico] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [medicoAConfirmar, setMedicoAConfirmar] = useState('');
-  const { crearAsignacion } = useAsignaciones();
+  const { crearAsignacion, eliminarAsignacion } = useAsignaciones();
   const [loading, setLoading] = useState(false);
 
   // Filtrar médicos que YA están asignados
@@ -65,6 +65,9 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
 
     setLoading(true);
     try {
+      if (medicoActual) {
+        await eliminarAsignacion(medicoActual.tarjetaProfesional);
+      }
       await crearAsignacion(selectedMedico, consultorio.idConsultorio);
       onSuccess();
       onClose();
