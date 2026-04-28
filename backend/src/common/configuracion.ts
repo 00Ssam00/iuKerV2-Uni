@@ -16,11 +16,7 @@ export const configuracion = {
   nodeEnv: variablesEntornoValidadas.data.NODE_ENV,
   frontendUrl: variablesEntornoValidadas.data.FRONTEND_URL,
   baseDatos: {
-    host: variablesEntornoValidadas.data.PGHOST,
-    puerto: variablesEntornoValidadas.data.PGPORT,
-    usuario: variablesEntornoValidadas.data.PGUSER,
-    contrasena: variablesEntornoValidadas.data.PGPASSWORD,
-    nombreDb: variablesEntornoValidadas.data.PGDBNAME
+    urlConexion: variablesEntornoValidadas.data.DATABASE_URL,
   }
 };
 

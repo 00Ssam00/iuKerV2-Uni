@@ -37,12 +37,22 @@ const CitaFormModal: React.FC<CitaFormModalProps> = ({ citaToEdit, baseUrl, prim
     : '';
 
   useEffect(() => {
-    if (!isEditing) {
+    if (citaToEdit) {
+      setFormData({
+        medico: citaToEdit.medicoTarjeta ?? '',
+        tipoDocPaciente: tipoDocMap[citaToEdit.tipoDocPaciente] || '1',
+        numeroDocPaciente: citaToEdit.numeroDocPaciente,
+        fecha: citaToEdit.fecha.split('T')[0],
+        horaInicio: citaToEdit.horaInicio.substring(0, 5),
+      });
+      setMedicoSugerido('');
+    } else {
+      setFormData({ medico: '', tipoDocPaciente: '', numeroDocPaciente: '', fecha: '', horaInicio: '' });
       axios.get<MedicosApiResponse>(`${MEDICOS_URL}?limite=1`)
         .then(res => { const m = res.data.medicos?.[0]; if (m) setMedicoSugerido(m.tarjetaProfesional); })
         .catch(() => setMedicoSugerido(''));
     }
-  }, [isEditing]);
+  }, [citaToEdit]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

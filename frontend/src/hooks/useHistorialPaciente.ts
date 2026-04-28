@@ -26,8 +26,9 @@ export const useHistorialPaciente = (): UseHistorialPacienteResult => {
       const response = await axios.get<HistorialApiResponse>(`${HISTORIAL_URL}/paciente/${doc.trim()}`);
       setData(response.data.historial ?? []);
     } catch (err) {
+      setData([]);
       if (axios.isAxiosError(err) && err.response?.status === 404) {
-        setData([]);
+        // sin historial es un estado válido, no un error
       } else {
         setError('Error al buscar el historial del paciente');
       }
