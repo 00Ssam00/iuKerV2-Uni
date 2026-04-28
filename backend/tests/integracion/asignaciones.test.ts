@@ -1,10 +1,6 @@
 import { describe, expect, jest, test, beforeAll, afterAll } from '@jest/globals';
 
-process.env.PGHOST = 'localhost';
-process.env.PGPORT = '5432';
-process.env.PGUSER = 'test';
-process.env.PGPASSWORD = 'test';
-process.env.PGDBNAME = 'testdb';
+process.env.DATABASE_URL = 'postgresql://test:test@localhost/testdb';
 process.env.NODE_ENV = 'test';
 
 const tarjetaExistente = 'TP-001';

@@ -3,11 +3,7 @@ import { MedicoSolicitudDTO } from '../../src/core/infraestructura/esquemas/medi
 import { IMedico } from '../../src/core/dominio/medico/IMedico.ts';
 import { describe, expect, jest, test } from '@jest/globals';
 
-process.env.PGHOST = 'localhost';
-process.env.PGPORT = '5432';
-process.env.PGUSER = 'test';
-process.env.PGPASSWORD = 'test';
-process.env.PGDBNAME = 'testdb';
+process.env.DATABASE_URL = 'postgresql://test:test@localhost/testdb';
 process.env.NODE_ENV = 'test';
 
 jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/MedicosRepositorio', () => ({
