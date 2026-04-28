@@ -12,6 +12,39 @@ interface UseMedicosResult {
   crearMedico: (medico: MedicoDTO) => Promise<void>;
 }
 
+const diasSemana = ['', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+const construirMedicosConHorario = (medicos: Medico[], asignaciones: Asignacion[]): Medico[] =>
+  medicos.map(medico => {
+    const asignacionesMedico = asignaciones.filter(a =>
+      a.tarjetaProfesionalMedico === medico.tarjetaProfesional
+    );
+
+    if (asignacionesMedico.length === 0) return { ...medico, horario: 'Sin asignar' };
+
+    const porDia = new Map<number, string[]>();
+    for (const a of asignacionesMedico) {
+      const franja = `${a.inicioJornada.slice(0, 5)} - ${a.finJornada.slice(0, 5)}`;
+      if (!porDia.has(a.diaSemana)) porDia.set(a.diaSemana, []);
+      porDia.get(a.diaSemana)!.push(franja);
+    }
+    const horarios = Array.from(porDia.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([dia, franjas]) => `${diasSemana[dia]}: ${franjas.join(' y ')}`)
+      .join(' | ');
+
+    return { ...medico, horario: horarios };
+  });
+
+const fetchAsignaciones = async (): Promise<Asignacion[]> => {
+  try {
+    const res = await axios.get<{ asignaciones: Asignacion[] }>(ASIGNACIONES_URL);
+    return res.data.asignaciones;
+  } catch {
+    return [];
+  }
+};
+
 export const useMedicos = (initialSearch?: string): UseMedicosResult => {
   const [data, setData] = useState<Medico[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,41 +54,11 @@ export const useMedicos = (initialSearch?: string): UseMedicosResult => {
     try {
       setLoading(true);
       setError(null);
-      const medicosRes = await axios.get<MedicosApiResponse>(MEDICOS_URL);
-
-      let asignaciones: Asignacion[] = [];
-      try {
-        const asignacionesRes = await axios.get<{ asignaciones: Asignacion[] }>(ASIGNACIONES_URL);
-        asignaciones = asignacionesRes.data.asignaciones;
-      } catch {
-        // Si no existe el endpoint, continuamos sin asignaciones
-      }
-
-      const medicosConHorario = medicosRes.data.medicos.map(medico => {
-        const asignacionesMedico = asignaciones.filter(a =>
-          a.tarjetaProfesionalMedico === medico.tarjetaProfesional
-        );
-
-        if (asignacionesMedico.length === 0) {
-          return { ...medico, horario: 'Sin asignar' };
-        }
-
-        const diasSemana = ['', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-        const porDia = new Map<number, string[]>();
-        for (const a of asignacionesMedico) {
-          const franja = `${a.inicioJornada.slice(0, 5)} - ${a.finJornada.slice(0, 5)}`;
-          if (!porDia.has(a.diaSemana)) porDia.set(a.diaSemana, []);
-          porDia.get(a.diaSemana)!.push(franja);
-        }
-        const horarios = Array.from(porDia.entries())
-          .sort(([a], [b]) => a - b)
-          .map(([dia, franjas]) => `${diasSemana[dia]}: ${franjas.join(' y ')}`)
-          .join(' | ');
-
-        return { ...medico, horario: horarios };
-      });
-
-      setData(medicosConHorario);
+      const [medicosRes, asignaciones] = await Promise.all([
+        axios.get<MedicosApiResponse>(MEDICOS_URL),
+        fetchAsignaciones(),
+      ]);
+      setData(construirMedicosConHorario(medicosRes.data.medicos, asignaciones));
     } catch {
       setError('Error al cargar los médicos');
     } finally {
@@ -71,40 +74,11 @@ export const useMedicos = (initialSearch?: string): UseMedicosResult => {
     try {
       setLoading(true);
       setError(null);
-      const medicosRes = await axios.get<MedicosApiResponse>(MEDICOS_URL);
-
-      let asignaciones: Asignacion[] = [];
-      try {
-        const asignacionesRes = await axios.get<{ asignaciones: Asignacion[] }>(ASIGNACIONES_URL);
-        asignaciones = asignacionesRes.data.asignaciones;
-      } catch {
-        // Si no existe el endpoint, continuamos sin asignaciones
-      }
-
-      const medicosConHorario = medicosRes.data.medicos.map(medico => {
-        const asignacionesMedico = asignaciones.filter(a =>
-          a.tarjetaProfesionalMedico === medico.tarjetaProfesional
-        );
-
-        if (asignacionesMedico.length === 0) {
-          return { ...medico, horario: 'Sin asignar' };
-        }
-
-        const diasSemana = ['', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-        const porDia = new Map<number, string[]>();
-        for (const a of asignacionesMedico) {
-          const franja = `${a.inicioJornada.slice(0, 5)} - ${a.finJornada.slice(0, 5)}`;
-          if (!porDia.has(a.diaSemana)) porDia.set(a.diaSemana, []);
-          porDia.get(a.diaSemana)!.push(franja);
-        }
-        const horarios = Array.from(porDia.entries())
-          .sort(([a], [b]) => a - b)
-          .map(([dia, franjas]) => `${diasSemana[dia]}: ${franjas.join(' y ')}`)
-          .join(' | ');
-
-        return { ...medico, horario: horarios };
-      });
-
+      const [medicosRes, asignaciones] = await Promise.all([
+        axios.get<MedicosApiResponse>(MEDICOS_URL),
+        fetchAsignaciones(),
+      ]);
+      const medicosConHorario = construirMedicosConHorario(medicosRes.data.medicos, asignaciones);
       const filtrados = medicosConHorario.filter(m =>
         m.nombre.toLowerCase().includes(query.trim().toLowerCase()) ||
         m.apellido.toLowerCase().includes(query.trim().toLowerCase()) ||

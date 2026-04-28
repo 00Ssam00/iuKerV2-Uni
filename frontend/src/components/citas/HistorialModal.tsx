@@ -17,11 +17,16 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const cargarHistorial = async () => {
       try {
-        const res = await axios.get<{ historial: HistorialEntry }>(`${HISTORIAL_URL}/cita/${idCita}`);
+        const res = await axios.get<{ historial: HistorialEntry }>(`${HISTORIAL_URL}/cita/${idCita}`, {
+          signal: controller.signal,
+        });
         setHistorial(res.data.historial ?? 'vacio');
       } catch (err) {
+        if (axios.isCancel(err)) return;
         if (axios.isAxiosError(err) && err.response?.status === 404) {
           setHistorial('vacio');
         }
@@ -29,7 +34,9 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
         setLoading(false);
       }
     };
+
     cargarHistorial();
+    return () => controller.abort();
   }, [idCita]);
 
   const handleRegistrar = async (e: React.FormEvent) => {
