@@ -56,6 +56,15 @@ export class AsignacionCasosUso implements IAsignacionCasosUso {
       throw crearErrorDeDominio(CodigosDeError.CONSULTORIO_OCUPADO);
     }
 
+    // Validación 5: El médico no está ya asignado a otro consultorio
+    const medicoYaTieneAsignacion =
+      await this.asignacionMedicoRepositorio.medicoYaTieneAsignacion(
+        nuevaAsignacion.tarjetaProfesionalMedico
+      );
+    if (medicoYaTieneAsignacion) {
+      throw crearErrorDeDominio(CodigosDeError.MEDICO_YA_ASIGNADO);
+    }
+
     //creación y persistencia
     const instanciaAsignacion = new AsignacionMedico(nuevaAsignacion);
 
@@ -71,5 +80,9 @@ export class AsignacionCasosUso implements IAsignacionCasosUso {
     await this.asignacionMedicoRepositorio.eliminarAsignacion(
       tarjetaProfesionalMedico
     );
+  }
+
+  async obtenerTodasLasAsignaciones(): Promise<IAsignacionMedico[]> {
+    return await this.asignacionMedicoRepositorio.obtenerTodasLasAsignaciones();
   }
 }

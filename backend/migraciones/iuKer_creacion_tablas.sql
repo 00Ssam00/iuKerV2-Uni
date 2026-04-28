@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS citas_medicas (
   hora_fin TIME GENERATED ALWAYS AS (hora_inicio + duracion) STORED,
   estado INT NOT NULL REFERENCES estados(id_estado),
   id_cita_anterior UUID REFERENCES citas_medicas (id_cita),
+  id_consultorio VARCHAR(5) REFERENCES consultorios (id_consultorio),
   FOREIGN KEY (tipo_doc_paciente, numero_doc_paciente) REFERENCES pacientes(tipo_doc, numero_doc)
 );
 

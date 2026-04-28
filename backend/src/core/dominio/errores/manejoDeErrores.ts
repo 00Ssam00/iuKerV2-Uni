@@ -54,6 +54,10 @@ const MAPA_ERRORES = {
     estado: EstadoHttp.CONFLICTO,
     mensaje: 'Esa asignación, con todos los datos proporcionados ya existe',
   },
+  [CodigosDeError.MEDICO_YA_ASIGNADO]: {
+    estado: EstadoHttp.CONFLICTO,
+    mensaje: 'El médico ya está asignado a otro consultorio. Un médico solo puede tener una asignación',
+  },
   //Errores consultorio
   [CodigosDeError.CONSULTORIO_NO_EXISTE]: {
     estado: EstadoHttp.NO_ENCONTRADO,

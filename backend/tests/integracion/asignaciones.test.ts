@@ -7,14 +7,34 @@ process.env.PGPASSWORD = 'test';
 process.env.PGDBNAME = 'testdb';
 process.env.NODE_ENV = 'test';
 
+const tarjetaExistente = 'TP-001';
 const tarjetaProfesionalParaTest = 'MP001';
 
-jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/AsignacionMedicoRepositorio', () => ({
+const asignacionesMock = [
+  {
+    tarjetaProfesionalMedico: tarjetaExistente,
+    idConsultorio: 'C101',
+    diaSemana: 1,
+    inicioJornada: '08:00',
+    finJornada: '17:00',
+  },
+  {
+    tarjetaProfesionalMedico: 'TP-002',
+    idConsultorio: 'C102',
+    diaSemana: 2,
+    inicioJornada: '09:00',
+    finJornada: '18:00',
+  },
+];
+
+jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/AsignacionMedicoRepositorio.js', () => ({
   AsignacionMedicoRepositorio: jest.fn().mockImplementation(() => ({
+    obtenerTodasLasAsignaciones: async () => asignacionesMock,
     crearAsignacion: async () => ({ idAsignacion: 'asig-uuid-001' }),
     existeAsignacion: async () => false,
     consultorioOcupado: async () => false,
-    eliminarAsignacion: async () => undefined,
+    medicoYaTieneAsignacion: jest.fn(),
+    eliminarAsignacion: async (_tarjeta: string) => undefined,
   })),
 }));
 
@@ -44,6 +64,17 @@ jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/M
   })),
 }));
 
+jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/PacientesRepositorio', () => ({
+  PacientesRepositorio: jest.fn().mockImplementation(() => ({
+    obtenerPacientes: jest.fn(),
+    obtenerPacientePorId: jest.fn(),
+    crearPaciente: jest.fn(),
+    actualizarPaciente: jest.fn(),
+    borrarPaciente: jest.fn(),
+    existePacientePorDocumento: jest.fn(),
+  })),
+}));
+
 jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/ConsultoriosRepositorio', () => ({
   ConsultorioRepositorio: jest.fn().mockImplementation(() => ({
     listarConsultorios: jest.fn(),
@@ -59,7 +90,7 @@ jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/C
   })),
 }));
 
-jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/CitasMedicasRepositorio', () => ({
+jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/CitasMedicasRepositorio.js', () => ({
   CitasMedicasRepositorio: jest.fn().mockImplementation(() => ({
     obtenerCitas: jest.fn(),
     obtenerCitaPorId: jest.fn(),
@@ -74,17 +105,6 @@ jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/C
     eliminarCitasPorPaciente: jest.fn(),
     obtenerCitasPorPaciente: jest.fn(),
     eliminarCitasPorMedico: jest.fn(),
-  })),
-}));
-
-jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/PacientesRepositorio', () => ({
-  PacientesRepositorio: jest.fn().mockImplementation(() => ({
-    obtenerPacientes: jest.fn(),
-    obtenerPacientePorId: jest.fn(),
-    crearPaciente: jest.fn(),
-    actualizarPaciente: jest.fn(),
-    borrarPaciente: jest.fn(),
-    existePacientePorDocumento: jest.fn(),
   })),
 }));
 
@@ -107,6 +127,19 @@ describe('Pruebas de integración - Módulo Asignaciones (HU-24)', () => {
     await pool.end();
   });
 
+  test('GET /api/asignaciones - Retorna todas las asignaciones simuladas', async () => {
+    // Act
+    const respuesta = await request(app.server).get('/api/asignaciones');
+
+    // Assert
+    expect(respuesta.status).toBe(200);
+    expect(respuesta.body).toEqual({
+      asignaciones: asignacionesMock,
+    });
+    expect(Array.isArray(respuesta.body.asignaciones)).toBe(true);
+    expect(respuesta.body.asignaciones).toHaveLength(2);
+  });
+
   // HU-24 — Eliminación de Asignaciones de un Médico a Consultorio
   describe('HU-24 — Eliminar asignación de médico', () => {
     test('DELETE /api/asignaciones/:tarjetaProfesionalMedico - Elimina las asignaciones correctamente', async () => {
@@ -120,8 +153,6 @@ describe('Pruebas de integración - Módulo Asignaciones (HU-24)', () => {
     });
 
     test('DELETE /api/asignaciones/:tarjetaProfesionalMedico - Acepta cualquier tarjeta sin validar existencia', async () => {
-      // El caso de uso no valida existencia del médico antes de eliminar,
-      // delega directamente al repositorio que retorna void
       const tarjetaInexistente = 'MP-NO-EXISTE-999';
 
       // Act

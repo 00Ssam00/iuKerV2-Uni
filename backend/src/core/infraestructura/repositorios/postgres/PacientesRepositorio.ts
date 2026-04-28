@@ -10,8 +10,8 @@ export class PacientesRepositorio implements IPacientesRepositorio {
   private get _queryBase(): string {
     return `
      SELECT
-      tipo_doc AS "tipoDocPaciente",
-      numero_doc AS "numeroDocPaciente",
+      tipo_doc AS "tipoDoc",
+      numero_doc AS "numeroDoc",
       nombre,
       apellido,
       fecha_nacimiento AS "fechaNacimiento",

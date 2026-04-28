@@ -12,6 +12,7 @@ function asignacionesEnrutador(
   app: FastifyInstance,
   asignacionesControlador: AsignacionesControlador
 ) {
+  app.get('/asignaciones', asignacionesControlador.obtenerAsignaciones);
   app.post('/asignaciones', asignacionesControlador.crearAsignacion);
   app.delete(
     '/asignaciones/:tarjetaProfesionalMedico',

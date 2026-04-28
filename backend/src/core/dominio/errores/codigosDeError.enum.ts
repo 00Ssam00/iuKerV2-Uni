@@ -16,6 +16,7 @@ export enum CodigosDeError {
   MEDICO_NO_DISPONIBLE = 'MED002', //No se encuentra disponible en ese horario
   MEDICO_CON_CITA_EN_MISMO_HORARIO = 'MED003',
   ASIGNACION_MEDICO_CONSULTORIO_YA_EXISTE = 'ASIG001',
+  MEDICO_YA_ASIGNADO = 'ASIG002', //Un médico no puede tener más de un consultorio
 
   //Errores de consultorio - [CONS]
   CONSULTORIO_NO_EXISTE = 'CONS001',

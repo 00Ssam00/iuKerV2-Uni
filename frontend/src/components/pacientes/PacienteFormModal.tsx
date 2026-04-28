@@ -11,8 +11,6 @@ interface PacienteFormModalProps {
   onClose: () => void;
 }
 
-const tipoDocMap: Record<string, string> = { '1': 'CC', '2': 'CE', '3': 'PA', '4': 'TI' };
-
 const PacienteFormModal: React.FC<PacienteFormModalProps> = ({ primaryColor, onSuccess, onClose }) => {
   const [formData, setFormData] = useState<PacienteDTO>({
     numeroDoc: '',

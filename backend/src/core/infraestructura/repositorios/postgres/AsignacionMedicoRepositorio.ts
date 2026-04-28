@@ -60,6 +60,16 @@ export class AsignacionMedicoRepositorio
     return result.rows.length > 0;
   }
 
+  async medicoYaTieneAsignacion(tarjetaProfesionalMedico: string): Promise<boolean> {
+    const query =
+      'SELECT 1 FROM asignacion_medicos ' +
+      'WHERE tarjeta_profesional_medico = $1 LIMIT 1';
+
+    const result = await ejecutarConsulta(query, [tarjetaProfesionalMedico]);
+
+    return result.rows.length > 0;
+  }
+
   async crearAsignacion(
     nuevaAsignacion: IAsignacionMedico
   ): Promise<AsignacionIdRespuestaDTO> {
@@ -89,5 +99,18 @@ export class AsignacionMedicoRepositorio
       'WHERE tarjeta_profesional_medico = $1';
 
     await ejecutarConsulta(query, [parametros]);
+  }
+
+  async obtenerTodasLasAsignaciones(): Promise<IAsignacionMedico[]> {
+    const query = 'SELECT * FROM asignacion_medicos ORDER BY tarjeta_profesional_medico';
+    const result = await ejecutarConsulta(query, []);
+
+    return result.rows.map((row: any) => ({
+      tarjetaProfesionalMedico: row.tarjeta_profesional_medico,
+      idConsultorio: row.id_consultorio,
+      diaSemana: row.dia_semana,
+      inicioJornada: row.inicio_jornada,
+      finJornada: row.fin_jornada,
+    }));
   }
 }

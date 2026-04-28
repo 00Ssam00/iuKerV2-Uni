@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, X, Check, Copy, MoreVertical } from 'lucide-react';
-import type { CitaMedica } from '../../types/index';
+import type { CitaMedica, Asignacion } from '../../types/index';
 import { formatDateShort, formatTime } from '../../utils/formatters';
 import EstadoBadge from '../shared/EstadoBadge';
 import CitaActionMenu from './CitaActionMenu';
@@ -11,6 +11,7 @@ interface CitasTableProps {
   error: string | null;
   primaryColor: string;
   baseUrl: string;
+  asignaciones?: Asignacion[];
   onVerHistorial: (idCita: string) => void;
   onReagendar: (cita: CitaMedica) => void;
   onSuccess: () => void;
@@ -18,11 +19,17 @@ interface CitasTableProps {
 }
 
 const CitasTable: React.FC<CitasTableProps> = ({
-  data, loading, error, primaryColor, baseUrl, onVerHistorial, onReagendar, onSuccess, onRetry,
+  data, loading, error, primaryColor, baseUrl, asignaciones, onVerHistorial, onReagendar, onSuccess, onRetry,
 }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const getConsultorioDeCita = (cita: CitaMedica) => {
+    if (!asignaciones || asignaciones.length === 0) return '—';
+    const asignacion = asignaciones.find(a => a.tarjetaProfesionalMedico === cita.medicoTarjeta);
+    return asignacion?.idConsultorio ?? '—';
+  };
 
   const toggleMenu = (citaId: string, e: React.MouseEvent<HTMLButtonElement>) => {
     if (openMenuId === citaId) {
@@ -85,7 +92,7 @@ const CitasTable: React.FC<CitasTableProps> = ({
               <tr className='bg-slate-50 border-b border-slate-200'>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>ID Cita</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Paciente</th>
-                <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Documento</th>
+                <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide leading-tight'>Tipo<br />Documento</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide leading-tight'>Número<br />Documento</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Médico</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Consultorio</th>
@@ -133,7 +140,7 @@ const CitasTable: React.FC<CitasTableProps> = ({
                     <td className='px-5 py-3.5 text-slate-500'>{cita.tipoDocPaciente}</td>
                     <td className='px-5 py-3.5 text-slate-500'>{cita.numeroDocPaciente}</td>
                     <td className='px-5 py-3.5 text-slate-700'>{cita.medico}</td>
-                    <td className='px-5 py-3.5 text-slate-500'>{cita.consultorio || '—'}</td>
+                    <td className='px-5 py-3.5 text-slate-500'>{getConsultorioDeCita(cita)}</td>
                     <td className='px-5 py-3.5 text-slate-600'>{formatDateShort(cita.fecha)}</td>
                     <td className='px-5 py-3.5 text-slate-600 tabular-nums'>{formatTime(cita.horaInicio)}</td>
                     <td className='px-5 py-3.5'>
