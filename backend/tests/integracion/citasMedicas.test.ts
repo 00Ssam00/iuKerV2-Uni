@@ -98,7 +98,25 @@ jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/C
     validarTurnoMedico: jest.fn(),
     reprogramarCita: jest.fn(),
     cancelarCita: jest.fn(),
-    finalizarCita: jest.fn(),
+    finalizarCita: async (idCita: string) => {
+      if (idCita === idParaTestearCitas) {
+        return {
+          idCita: idParaTestearCitas,
+          paciente: 'Juan Pérez',
+          tipoDocPaciente: 'Cédula',
+          numeroDocPaciente: '100001',
+          medico: 'Carlos Rodríguez',
+          ubicacion: 'Edificio E, Piso 3',
+          consultorio: 'C101',
+          fecha: '2025-11-25T05:00:00.000Z',
+          horaInicio: '08:00:00',
+          codigoEstadoCita: 4,
+          estadoCita: 'Finalizada',
+          idCitaAnterior: null,
+        };
+      }
+      return null;
+    },
     eliminarCitasPorPaciente: jest.fn(),
     obtenerCitasPorPaciente: jest.fn(),
     eliminarCitasPorMedico: jest.fn(),
@@ -246,5 +264,33 @@ describe('Pruebas de integración - Módulo citas medicas', () => {
       mensaje: 'La cita solicita no existe en el sistema',
       codigoInterno: 'CITA001',
     });
+  });
+
+  // HU-11 — Finalización de Cita Médica con Control de Estado
+  test('PUT /api/citas-medicas/finalizacion/:idCita - Finaliza la cita correctamente', async () => {
+    // Arrange
+    const idCita = idParaTestearCitas;
+
+    // Act
+    const respuesta = await request(app.server).put(`/api/citas-medicas/finalizacion/${idCita}`);
+
+    // Assert
+    expect(respuesta.status).toBe(200);
+    expect(respuesta.body.mensaje).toBe('Cita finalizada correctamente');
+    expect(respuesta.body.citaFinalizada).toBeDefined();
+    expect(respuesta.body.citaFinalizada.codigoEstadoCita).toBe(4);
+    expect(respuesta.body.citaFinalizada.estadoCita).toBe('Finalizada');
+  });
+
+  test('PUT /api/citas-medicas/finalizacion/:idCita - Retorna 500 si la cita no existe', async () => {
+    // Arrange
+    const idCitaInexistente = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
+
+    // Act
+    const respuesta = await request(app.server).put(`/api/citas-medicas/finalizacion/${idCitaInexistente}`);
+
+    // Assert
+    expect(respuesta.status).toBe(500);
+    expect(respuesta.body.mensaje).toBe('Fallo interno en el servidor.');
   });
 });
