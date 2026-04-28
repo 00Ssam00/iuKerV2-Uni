@@ -25,10 +25,11 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
   const [medicoAConfirmar, setMedicoAConfirmar] = useState('');
   const { crearAsignacion, eliminarAsignacion } = useAsignaciones();
   const [loading, setLoading] = useState(false);
+  const [errorAsignacion, setErrorAsignacion] = useState<string | null>(null);
 
   // Filtrar médicos que YA están asignados
   const medicosNoAsignados = medicosDisponibles.filter(medico => {
-    const yaAsignado = asignaciones.some(a => a.tarjetaProfesional === medico.tarjetaProfesional);
+    const yaAsignado = asignaciones.some(a => a.tarjetaProfesionalMedico === medico.tarjetaProfesional);
     return !yaAsignado;
   });
 
@@ -36,7 +37,7 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
     if (!consultorio) return null;
     const asignacion = asignaciones.find(a => a.idConsultorio === consultorio.idConsultorio);
     if (!asignacion) return null;
-    return medicosDisponibles.find(m => m.tarjetaProfesional === asignacion.tarjetaProfesional);
+    return medicosDisponibles.find(m => m.tarjetaProfesional === asignacion.tarjetaProfesionalMedico);
   };
 
   const medicoActual = getMedicoActualDelConsultorio();
@@ -64,6 +65,7 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
     }
 
     setLoading(true);
+    setErrorAsignacion(null);
     try {
       if (medicoActual) {
         await eliminarAsignacion(medicoActual.tarjetaProfesional);
@@ -71,6 +73,8 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
       await crearAsignacion(selectedMedico, consultorio.idConsultorio);
       onSuccess();
       onClose();
+    } catch {
+      setErrorAsignacion('No se pudo completar la asignación. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -128,6 +132,12 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
               </div>
             )}
           </div>
+
+          {errorAsignacion && (
+            <div className='px-6 pb-2'>
+              <p className='text-sm text-red-700 bg-red-50 px-3 py-2 rounded-lg border border-red-200'>{errorAsignacion}</p>
+            </div>
+          )}
 
           <div className='px-6 pb-6 flex gap-3'>
             <button

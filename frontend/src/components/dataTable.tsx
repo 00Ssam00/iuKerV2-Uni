@@ -49,7 +49,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
               backgroundColor: viewMode === 'normal' ? primaryColor : 'transparent',
             }}
           >
-            Vista Normal
+            Vista General
           </button>
           <button
             onClick={() => setViewMode('fecha')}

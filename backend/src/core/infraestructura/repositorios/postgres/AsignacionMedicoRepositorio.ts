@@ -106,7 +106,7 @@ export class AsignacionMedicoRepositorio
     const result = await ejecutarConsulta(query, []);
 
     return result.rows.map((row: any) => ({
-      tarjetaProfesional: row.tarjeta_profesional_medico,
+      tarjetaProfesionalMedico: row.tarjeta_profesional_medico,
       idConsultorio: row.id_consultorio,
       diaSemana: row.dia_semana,
       inicioJornada: row.inicio_jornada,

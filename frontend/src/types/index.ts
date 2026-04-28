@@ -130,7 +130,7 @@ export interface CitasAgrupadas {
 }
 
 export interface Asignacion {
-  tarjetaProfesional: string;
+  tarjetaProfesionalMedico: string;
   idConsultorio: string;
   diaSemana: number;
   inicioJornada: string;

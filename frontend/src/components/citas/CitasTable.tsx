@@ -27,7 +27,7 @@ const CitasTable: React.FC<CitasTableProps> = ({
 
   const getConsultorioDeCita = (cita: CitaMedica) => {
     if (!asignaciones || asignaciones.length === 0) return '—';
-    const asignacion = asignaciones.find(a => a.tarjetaProfesional === cita.medicoTarjeta);
+    const asignacion = asignaciones.find(a => a.tarjetaProfesionalMedico === cita.medicoTarjeta);
     return asignacion?.idConsultorio ?? '—';
   };
 
@@ -92,7 +92,7 @@ const CitasTable: React.FC<CitasTableProps> = ({
               <tr className='bg-slate-50 border-b border-slate-200'>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>ID Cita</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Paciente</th>
-                <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Documento</th>
+                <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide leading-tight'>Tipo<br />Documento</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide leading-tight'>Número<br />Documento</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Médico</th>
                 <th className='px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide'>Consultorio</th>

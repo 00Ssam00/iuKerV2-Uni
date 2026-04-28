@@ -33,7 +33,7 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
     const asignacion = asignaciones.find(a => a.idConsultorio === consultorioId);
     if (!asignacion) return 'Sin asignar';
 
-    const medico = medicos.find(m => m.tarjetaProfesional === asignacion.tarjetaProfesional);
+    const medico = medicos.find(m => m.tarjetaProfesional === asignacion.tarjetaProfesionalMedico);
     return medico ? `${medico.tarjetaProfesional} - ${medico.especialidad}` : 'Sin asignar';
   };
 

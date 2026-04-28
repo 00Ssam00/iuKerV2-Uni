@@ -33,17 +33,24 @@ export const useMedicos = (initialSearch?: string): UseMedicosResult => {
 
       const medicosConHorario = medicosRes.data.medicos.map(medico => {
         const asignacionesMedico = asignaciones.filter(a =>
-          a.tarjetaProfesional === medico.tarjetaProfesional
+          a.tarjetaProfesionalMedico === medico.tarjetaProfesional
         );
 
         if (asignacionesMedico.length === 0) {
           return { ...medico, horario: 'Sin asignar' };
         }
 
-        const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-        const horarios = asignacionesMedico.map(a =>
-          `${diasSemana[a.diaSemana]}: ${a.inicioJornada}-${a.finJornada}`
-        ).join(' | ');
+        const diasSemana = ['', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+        const porDia = new Map<number, string[]>();
+        for (const a of asignacionesMedico) {
+          const franja = `${a.inicioJornada.slice(0, 5)} - ${a.finJornada.slice(0, 5)}`;
+          if (!porDia.has(a.diaSemana)) porDia.set(a.diaSemana, []);
+          porDia.get(a.diaSemana)!.push(franja);
+        }
+        const horarios = Array.from(porDia.entries())
+          .sort(([a], [b]) => a - b)
+          .map(([dia, franjas]) => `${diasSemana[dia]}: ${franjas.join(' y ')}`)
+          .join(' | ');
 
         return { ...medico, horario: horarios };
       });
@@ -76,17 +83,24 @@ export const useMedicos = (initialSearch?: string): UseMedicosResult => {
 
       const medicosConHorario = medicosRes.data.medicos.map(medico => {
         const asignacionesMedico = asignaciones.filter(a =>
-          a.tarjetaProfesional === medico.tarjetaProfesional
+          a.tarjetaProfesionalMedico === medico.tarjetaProfesional
         );
 
         if (asignacionesMedico.length === 0) {
           return { ...medico, horario: 'Sin asignar' };
         }
 
-        const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-        const horarios = asignacionesMedico.map(a =>
-          `${diasSemana[a.diaSemana]}: ${a.inicioJornada}-${a.finJornada}`
-        ).join(' | ');
+        const diasSemana = ['', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+        const porDia = new Map<number, string[]>();
+        for (const a of asignacionesMedico) {
+          const franja = `${a.inicioJornada.slice(0, 5)} - ${a.finJornada.slice(0, 5)}`;
+          if (!porDia.has(a.diaSemana)) porDia.set(a.diaSemana, []);
+          porDia.get(a.diaSemana)!.push(franja);
+        }
+        const horarios = Array.from(porDia.entries())
+          .sort(([a], [b]) => a - b)
+          .map(([dia, franjas]) => `${diasSemana[dia]}: ${franjas.join(' y ')}`)
+          .join(' | ');
 
         return { ...medico, horario: horarios };
       });
