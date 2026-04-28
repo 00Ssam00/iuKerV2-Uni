@@ -73,9 +73,9 @@ export class PacientesCasosUso implements IPacientesCasosUso {
       numeroDocPaciente
     );
 
-    if (datosCitaAEliminar?.tipoDoc) {
+    if (datosCitaAEliminar?.tipoDocPaciente) {
       await this.citasMedicasRepositorio.eliminarCitasPorPaciente(
-        datosCitaAEliminar.tipoDoc,
+        datosCitaAEliminar.tipoDocPaciente,
         numeroDocPaciente
       );
     }
