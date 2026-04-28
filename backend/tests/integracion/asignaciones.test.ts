@@ -8,6 +8,7 @@ process.env.PGDBNAME = 'testdb';
 process.env.NODE_ENV = 'test';
 
 const tarjetaExistente = 'TP-001';
+const tarjetaProfesionalParaTest = 'MP001';
 
 const asignacionesMock = [
   {
@@ -29,9 +30,9 @@ const asignacionesMock = [
 jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/AsignacionMedicoRepositorio.js', () => ({
   AsignacionMedicoRepositorio: jest.fn().mockImplementation(() => ({
     obtenerTodasLasAsignaciones: async () => asignacionesMock,
-    crearAsignacion: jest.fn(),
-    existeAsignacion: jest.fn(),
-    consultorioOcupado: jest.fn(),
+    crearAsignacion: async () => ({ idAsignacion: 'asig-uuid-001' }),
+    existeAsignacion: async () => false,
+    consultorioOcupado: async () => false,
     medicoYaTieneAsignacion: jest.fn(),
     eliminarAsignacion: async (_tarjeta: string) => undefined,
   })),
@@ -39,9 +40,25 @@ jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/A
 
 jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/MedicosRepositorio', () => ({
   MedicosRepositorio: jest.fn().mockImplementation(() => ({
-    listarMedicos: jest.fn(),
-    obtenerMedicoPorTarjetaProfesional: jest.fn(),
     crearMedico: jest.fn(),
+    listarMedicos: jest.fn(),
+    obtenerMedicoPorTarjetaProfesional: async (tarjeta: string) => {
+      if (tarjeta === tarjetaProfesionalParaTest) {
+        return {
+          tarjetaProfesional: tarjetaProfesionalParaTest,
+          tipoDoc: 'Cédula',
+          numeroDoc: '900001',
+          nombre: 'Carlos',
+          apellido: 'Rodríguez',
+          fechaNacimiento: '1980-03-12T05:00:00.000Z',
+          sexo: 'M',
+          especialidad: 'Medicina General',
+          email: 'carlos.rodriguez@clinicaiuker.com',
+          telefono: '3105556677',
+        };
+      }
+      return null;
+    },
     actualizarMedico: jest.fn(),
     eliminarMedico: jest.fn(),
   })),
@@ -61,7 +78,12 @@ jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/P
 jest.unstable_mockModule('../../src/core/infraestructura/repositorios/postgres/ConsultoriosRepositorio', () => ({
   ConsultorioRepositorio: jest.fn().mockImplementation(() => ({
     listarConsultorios: jest.fn(),
-    obtenerConsultorioPorId: jest.fn(),
+    obtenerConsultorioPorId: async (idConsultorio: string) => {
+      if (idConsultorio === 'C101') {
+        return { idConsultorio: 'C101', ubicacion: 'Edificio A, Piso 2' };
+      }
+      return null;
+    },
     agregarConsultorio: jest.fn(),
     actualizarConsultorio: jest.fn(),
     eliminarConsultorio: jest.fn(),
@@ -95,7 +117,7 @@ const { default: request } = await import('supertest');
 const { app } = await import('../../src/core/infraestructura/app.js');
 const { pool } = await import('../../src/core/infraestructura/repositorios/postgres/clientePostgres.js');
 
-describe('Pruebas de integración - Módulo asignaciones', () => {
+describe('Pruebas de integración - Módulo Asignaciones (HU-24)', () => {
   beforeAll(async () => {
     await app.ready();
   });
@@ -118,28 +140,28 @@ describe('Pruebas de integración - Módulo asignaciones', () => {
     expect(respuesta.body.asignaciones).toHaveLength(2);
   });
 
-  test('DELETE /api/asignaciones/:tarjetaProfesionalMedico - Elimina la asignación correctamente', async () => {
-    // Act
-    const respuesta = await request(app.server).delete(`/api/asignaciones/${tarjetaExistente}`);
+  // HU-24 — Eliminación de Asignaciones de un Médico a Consultorio
+  describe('HU-24 — Eliminar asignación de médico', () => {
+    test('DELETE /api/asignaciones/:tarjetaProfesionalMedico - Elimina las asignaciones correctamente', async () => {
+      // Act
+      const respuesta = await request(app.server)
+        .delete(`/api/asignaciones/${tarjetaProfesionalParaTest}`);
 
-    // Assert
-    expect(respuesta.status).toBe(200);
-    expect(respuesta.body).toEqual({
-      mensaje: `Eliminado el medico con id '${tarjetaExistente}'`,
+      // Assert
+      expect(respuesta.status).toBe(200);
+      expect(respuesta.body.mensaje).toBe(`Eliminado el medico con id '${tarjetaProfesionalParaTest}'`);
     });
-  });
 
-  test('DELETE /api/asignaciones/:tarjetaProfesionalMedico - Retorna 200 incluso si no existe (sin validación de existencia)', async () => {
-    // Arrange
-    const tarjetaInexistente = 'TP-999';
+    test('DELETE /api/asignaciones/:tarjetaProfesionalMedico - Acepta cualquier tarjeta sin validar existencia', async () => {
+      const tarjetaInexistente = 'MP-NO-EXISTE-999';
 
-    // Act
-    const respuesta = await request(app.server).delete(`/api/asignaciones/${tarjetaInexistente}`);
+      // Act
+      const respuesta = await request(app.server)
+        .delete(`/api/asignaciones/${tarjetaInexistente}`);
 
-    // Assert
-    expect(respuesta.status).toBe(200);
-    expect(respuesta.body).toEqual({
-      mensaje: `Eliminado el medico con id '${tarjetaInexistente}'`,
+      // Assert
+      expect(respuesta.status).toBe(200);
+      expect(respuesta.body.mensaje).toBe(`Eliminado el medico con id '${tarjetaInexistente}'`);
     });
   });
 });
