@@ -26,7 +26,14 @@ interface GestionProps {
 }
 
 const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }) => {
-  const [currentTab, setCurrentTab] = useState<'pacientes' | 'medicos' | 'consultorios'>(activeTab);
+  const [currentTab, setCurrentTab] = useState<'pacientes' | 'medicos' | 'consultorios'>(
+    () => (sessionStorage.getItem('gestionTab') as 'pacientes' | 'medicos' | 'consultorios') ?? activeTab
+  );
+
+  const cambiarTab = (tab: 'pacientes' | 'medicos' | 'consultorios') => {
+    sessionStorage.setItem('gestionTab', tab);
+    setCurrentTab(tab);
+  };
   const [consultorioEditando, setConsultorioEditando] = useState<any>(null);
   const [consultorioParaAsignar, setConsultorioParaAsignar] = useState<Consultorio | null>(null);
   const [showPacienteModal, setShowPacienteModal] = useState(false);
@@ -40,7 +47,7 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
   const { data: asignaciones } = useAsignaciones();
   const { showToast } = useToast();
 
-  const primaryColor = '#2563EB';
+  const primaryColor = '#15425b';
 
   const handleEliminarMedico = async (tarjeta: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este médico?')) {
@@ -84,32 +91,29 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
         <div className='mb-6 border-b border-slate-200'>
           <div className='flex gap-4'>
             <button
-              onClick={() => setCurrentTab('pacientes')}
+              onClick={() => cambiarTab('pacientes')}
               className={`px-6 py-3 font-medium text-sm transition-all border-b-2 ${
-                currentTab === 'pacientes'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-slate-600 hover:text-slate-900'
+                currentTab === 'pacientes' ? '' : 'border-transparent text-slate-600 hover:text-slate-900'
               }`}
+              style={currentTab === 'pacientes' ? { borderColor: primaryColor, color: primaryColor } : {}}
             >
               Pacientes
             </button>
             <button
-              onClick={() => setCurrentTab('medicos')}
+              onClick={() => cambiarTab('medicos')}
               className={`px-6 py-3 font-medium text-sm transition-all border-b-2 ${
-                currentTab === 'medicos'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-slate-600 hover:text-slate-900'
+                currentTab === 'medicos' ? '' : 'border-transparent text-slate-600 hover:text-slate-900'
               }`}
+              style={currentTab === 'medicos' ? { borderColor: primaryColor, color: primaryColor } : {}}
             >
               Médicos
             </button>
             <button
-              onClick={() => setCurrentTab('consultorios')}
+              onClick={() => cambiarTab('consultorios')}
               className={`px-6 py-3 font-medium text-sm transition-all border-b-2 ${
-                currentTab === 'consultorios'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-slate-600 hover:text-slate-900'
+                currentTab === 'consultorios' ? '' : 'border-transparent text-slate-600 hover:text-slate-900'
               }`}
+              style={currentTab === 'consultorios' ? { borderColor: primaryColor, color: primaryColor } : {}}
             >
               Consultorios
             </button>

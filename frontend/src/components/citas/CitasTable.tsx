@@ -52,8 +52,9 @@ const CitasTable: React.FC<CitasTableProps> = ({
     return (
       <div className='bg-white rounded-xl border border-slate-200 shadow-sm'>
         <div className='flex flex-col items-center justify-center py-20 gap-3'>
-          <div className='w-8 h-8 border-2 rounded-full animate-spin' style={{ borderColor: `${primaryColor}40`, borderTopColor: 'transparent' }}>
-            <div className='w-8 h-8 border-2 border-t-transparent rounded-full animate-spin' style={{ borderColor: primaryColor, borderTopColor: 'transparent' }} />
+          <div className='relative w-8 h-8'>
+            <div className='absolute inset-0 rounded-full border-2' style={{ borderColor: `${primaryColor}40` }} />
+            <div className='absolute inset-0 rounded-full border-2 border-t-transparent animate-spin' style={{ borderColor: primaryColor, borderTopColor: 'transparent' }} />
           </div>
           <p className='text-sm text-slate-400'>Cargando citas...</p>
         </div>

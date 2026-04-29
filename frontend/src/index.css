@@ -1,1 +1,5 @@
 @import 'tailwindcss';
+
+:root {
+  accent-color: #15425b;
+}

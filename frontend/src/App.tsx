@@ -10,17 +10,20 @@ export type Pagina = 'citas' | 'historial' | 'gestion';
 export type NavParams = { buscarId?: string };
 
 function App() {
-  const [pagina, setPagina] = useState<Pagina>('citas');
+  const [pagina, setPagina] = useState<Pagina>(
+    () => (sessionStorage.getItem('paginaActual') as Pagina) ?? 'citas'
+  );
   const [navParams, setNavParams] = useState<NavParams>({});
   const [showPacienteModal, setShowPacienteModal] = useState(false);
   const pacientes = usePacientes();
 
   const handleNavigate = (p: Pagina, params: NavParams = {}) => {
+    sessionStorage.setItem('paginaActual', p);
     setNavParams(params);
     setPagina(p);
   };
 
-  const primaryColor = '#2563EB';
+  const primaryColor = '#15425b';
 
   return (
     <ToastProvider>

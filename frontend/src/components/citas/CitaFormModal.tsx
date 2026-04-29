@@ -127,7 +127,7 @@ const CitaFormModal: React.FC<CitaFormModalProps> = ({ citaToEdit, baseUrl, prim
                 <button
                   type='button'
                   onClick={() => setFormData(p => ({ ...p, medico: medicoSugerido }))}
-                  className='text-blue-500 hover:underline font-medium'
+                  className='hover:underline font-medium' style={{ color: '#15425b' }}
                 >
                   {medicoSugerido}
                 </button>

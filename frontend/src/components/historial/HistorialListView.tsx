@@ -41,7 +41,7 @@ const HistorialListView: React.FC<HistorialListViewProps> = ({
         </form>
         <button
           onClick={onOpenModal}
-          className='flex items-center gap-2 px-4 py-2.5 text-sm text-white bg-blue-600 rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all font-medium'
+          className='flex items-center gap-2 px-4 py-2.5 text-sm text-white rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all font-medium' style={{ backgroundColor: '#15425b' }}
         >
           <Plus size={16} />
           Registrar historial
@@ -50,7 +50,10 @@ const HistorialListView: React.FC<HistorialListViewProps> = ({
 
       {loading ? (
         <div className='flex flex-col items-center justify-center py-24 gap-3'>
-          <div className='w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin' />
+          <div className='relative w-8 h-8'>
+            <div className='absolute inset-0 rounded-full border-2' style={{ borderColor: '#15425b40' }} />
+            <div className='absolute inset-0 rounded-full border-2 border-t-transparent animate-spin' style={{ borderColor: '#15425b', borderTopColor: 'transparent' }} />
+          </div>
           <p className='text-sm text-slate-400'>Buscando historial...</p>
         </div>
       ) : error ? (
@@ -80,11 +83,11 @@ const HistorialListView: React.FC<HistorialListViewProps> = ({
               <button
                 key={h.idHistorial}
                 onClick={() => onSelectEntry(h)}
-                className='bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-left group'
+                className='bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all text-left group'
               >
                 <div className='px-5 pt-5 pb-4 flex items-start gap-3'>
-                  <div className='w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors'>
-                    <FileText size={18} className='text-blue-600' />
+                  <div className='w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-slate-200 transition-colors'>
+                    <FileText size={18} style={{ color: '#15425b' }} />
                   </div>
                   <div className='min-w-0'>
                     <p className='font-semibold text-slate-800 text-sm leading-tight'>{h.paciente}</p>
