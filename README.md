@@ -67,24 +67,42 @@ Si tuviste algún error, ve a <a href="#erroresDependencias">este link</a>.
 ---
 
 ## 3️⃣ Crea tu archivo `.env`
-El archivo .env contiene las variables de entorno, es decir, configuraciones y credenciales que la aplicacion necesita para ejecutarse.
+El archivo `.env` contiene las variables de entorno que la aplicación necesita para ejecutarse.
 
-En la raiz del proyecto, encontraras un archivo llamado `.env-ejemplo`. Sigue las instrucciones dentro de este para tener tu configuracion.
+Dentro de la carpeta `backend/` encontrarás un archivo llamado `.env-ejemplo`. Cópialo con el nombre `.env` y completa los valores:
+
+```bash
+cp backend/.env-ejemplo backend/.env
+```
+
+Las variables que debes configurar son:
+
+| Variable | Descripción |
+|---|---|
+| `PUERTO` | Puerto HTTP del servidor (ej: `3001`) |
+| `DATABASE_URL` | URL de conexión a NeonDB (ver paso 4) |
+| `FRONTEND_URL` | URL del frontend (ej: `http://localhost:5173`) |
+| `NODE_ENV` | Entorno de ejecución (`development` o `production`) |
 
 ---
 
-## 4️⃣ Crea las tablas e inserta los datos a tu BBDD
-> [!WARNING]
-> DEBES CREAR TU BASE DE DATOS ANTES DE EJECUTAR ESTOS SCRIPTS
->
->
-> SU NOMBRE DEBE SER "iukerdb"
->
->
-Luego de crear tu base de datos llamada "iukerdb", ejecuta los archivos que se encuentran en la carpeta `/migraciones` en el siguiente orden:
+## 4️⃣ Configura la base de datos con NeonDB
+Este proyecto usa **[NeonDB](https://neon.tech)** como base de datos PostgreSQL en la nube, en lugar de una instalación local.
 
-1. `iuKer_creacion_tablas.sql` que incluye el **script para crear el esquema y las tablas de la base de datos**.
-2. `iuKer_insercion_datos.sql` que incluye la **insercion** de datos de prueba, para hacer test de CRUD.
+### 4.1 Crear una cuenta y proyecto en Neon
+1. Regístrate en [neon.tech](https://neon.tech) (puedes usar GitHub)
+2. Crea un nuevo proyecto y una base de datos (puedes llamarla `iukerdb`)
+3. En el dashboard de Neon, copia la **Connection string** — se ve así:
+```
+postgresql://usuario:contraseña@ep-xxx.us-east-1.aws.neon.tech/iukerdb?sslmode=require
+```
+4. Pégala como valor de `DATABASE_URL` en tu archivo `.env`
+
+### 4.2 Ejecutar las migraciones
+Con tu base de datos creada en Neon, ejecuta los scripts de la carpeta `backend/migraciones/` usando el editor SQL del dashboard de Neon o `psql`, en el siguiente orden:
+
+1. `iuKer_creacion_tablas.sql` — crea el esquema y las tablas
+2. `iuKer_insercion_datos.sql` — inserta datos de prueba para CRUD
 
 ---
 ## 5️⃣ Compila el proyecto
@@ -140,6 +158,35 @@ node --experimental-vm-modules node_modules/jest/bin/jest.js
 - Si todas las pruebas pasan, verás un resumen con el número total de tests ejecutados y el detalle por archivo.
 - Si alguna prueba falla, Jest mostrará el mensaje de error, el archivo y el test específico que falló para facilitar la depuración.
 - Revisa los porcentajes de **Statements**, **Branches**, **Functions** y **Lines** para validar que se cumple el objetivo de cobertura definido para el sprint.
+
+---
+
+## 🌐 Despliegue en producción
+
+El proyecto está desplegado en **[Railway](https://railway.app)**:
+
+| Componente | URL |
+|---|---|
+| Frontend | https://iuker.up.railway.app |
+| Backend | https://iukerback.up.railway.app |
+| Base de datos | NeonDB (PostgreSQL serverless) |
+
+### Variables de entorno en Railway
+
+**Backend:**
+| Variable | Valor |
+|---|---|
+| `DATABASE_URL` | URL de conexión de NeonDB |
+| `FRONTEND_URL` | `https://iuker.up.railway.app` |
+| `NODE_ENV` | `production` |
+| `PORT` | `3001` |
+
+**Frontend:**
+| Variable | Valor |
+|---|---|
+| `VITE_API_URL` | `https://iukerback.up.railway.app` |
+
+---
 
 <a id="erroresDependencias"></a>
 # ⚠️ Errores
