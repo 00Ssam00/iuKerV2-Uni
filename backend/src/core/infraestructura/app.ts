@@ -42,7 +42,8 @@ app.register(
 
 export const startServer = async (): Promise<void> => {
   try {
-    await app.listen({ port: configuracion.httpPuerto });
+    const puerto = Number(process.env['PORT']) || configuracion.httpPuerto;
+    await app.listen({ port: puerto, host: '0.0.0.0' });
     app.log.info('✅ El servidor esta corriendo...');
   } catch (err) {
     app.log.error(`Error al ejecutar el servidor\n ${err}`);
