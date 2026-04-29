@@ -11,8 +11,8 @@ describe('PacientesCasosUso', () => {
   let mockCitasMedicasRepositorio: jest.Mocked<ICitasMedicasRepositorio>;
 
   const pacienteMock: pacienteRespuestaDTO = {
-    tipoDocPaciente: 1,
-    numeroDocPaciente: '100001',
+    tipoDoc: 1,
+    numeroDoc: '100001',
     nombre: 'Juan',
     apellido: 'Pérez',
     fechaNacimiento: '1990-05-10T00:00:00.000Z',
@@ -147,7 +147,7 @@ describe('PacientesCasosUso', () => {
       // Assert
       expect(mockPacientesRepositorio.obtenerPacientePorId).toHaveBeenCalledWith('100001');
       expect(mockCitasMedicasRepositorio.eliminarCitasPorPaciente).toHaveBeenCalledWith(
-        pacienteMock.tipoDocPaciente,
+        pacienteMock.tipoDoc,
         '100001'
       );
       expect(mockPacientesRepositorio.borrarPaciente).toHaveBeenCalledWith('100001');
