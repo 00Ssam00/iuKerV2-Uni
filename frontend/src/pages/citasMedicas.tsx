@@ -1,4 +1,5 @@
 import DataTable from '../components/dataTable';
+import { CITAS_URL } from '../constants/api';
 import type { Pagina, NavParams } from '../App';
 
 interface CitasMedicasProps {
@@ -9,7 +10,7 @@ interface CitasMedicasProps {
 const CitasMedicas = ({ onNavigate, initialSearch }: CitasMedicasProps) => {
   return (
     <DataTable
-      baseUrl='http://localhost:3001/api/citas-medicas'
+      baseUrl={CITAS_URL}
       primaryColor='#2563EB'
       onNavigate={onNavigate}
       initialSearch={initialSearch}
