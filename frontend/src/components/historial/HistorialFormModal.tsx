@@ -62,7 +62,7 @@ const HistorialFormModal: React.FC<HistorialFormModalProps> = ({ onSuccess, onCl
               value={formData.idCita}
               onChange={(e) => setFormData(p => ({ ...p, idCita: e.target.value }))}
               placeholder='UUID de la cita finalizada'
-              className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono'
+              className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:bg-white transition-all font-mono'
             />
           </div>
 
@@ -75,7 +75,7 @@ const HistorialFormModal: React.FC<HistorialFormModalProps> = ({ onSuccess, onCl
               onChange={(e) => setFormData(p => ({ ...p, diagnostico: e.target.value }))}
               placeholder='Diagnóstico del médico (mín. 5 caracteres)'
               rows={3}
-              className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none'
+              className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:bg-white transition-all resize-none'
             />
           </div>
 
@@ -88,7 +88,7 @@ const HistorialFormModal: React.FC<HistorialFormModalProps> = ({ onSuccess, onCl
               onChange={(e) => setFormData(p => ({ ...p, descripcion: e.target.value }))}
               placeholder='Notas adicionales o detalles de la consulta'
               rows={3}
-              className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none'
+              className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:bg-white transition-all resize-none'
             />
           </div>
         </div>
@@ -104,7 +104,7 @@ const HistorialFormModal: React.FC<HistorialFormModalProps> = ({ onSuccess, onCl
           <button
             onClick={handleRegistrar}
             disabled={submitting}
-            className='flex-1 py-2.5 text-sm text-white bg-blue-600 rounded-lg hover:opacity-90 active:scale-95 transition-all font-medium disabled:opacity-60'
+            className='flex-1 py-2.5 text-sm text-white rounded-lg hover:opacity-90 active:scale-95 transition-all font-medium disabled:opacity-60' style={{ backgroundColor: '#15425b' }}
           >
             {submitting ? 'Guardando...' : 'Registrar'}
           </button>

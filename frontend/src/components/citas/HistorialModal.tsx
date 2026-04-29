@@ -78,7 +78,10 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
         <div className='p-6'>
           {loading ? (
             <div className='flex justify-center py-8'>
-              <div className='w-7 h-7 border-2 border-blue-500 border-t-transparent rounded-full animate-spin' />
+              <div className='relative w-7 h-7'>
+                <div className='absolute inset-0 rounded-full border-2' style={{ borderColor: '#15425b40' }} />
+                <div className='absolute inset-0 rounded-full border-2 border-t-transparent animate-spin' style={{ borderColor: '#15425b', borderTopColor: 'transparent' }} />
+              </div>
             </div>
           ) : historial === 'vacio' ? (
             <div className='space-y-4'>
@@ -97,7 +100,7 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
                       onChange={(e) => setFormInline(p => ({ ...p, diagnostico: e.target.value }))}
                       placeholder='Diagnóstico del médico'
                       rows={3}
-                      className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none'
+                      className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:bg-white transition-all resize-none'
                     />
                   </div>
                   <div>
@@ -109,13 +112,13 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
                       onChange={(e) => setFormInline(p => ({ ...p, descripcion: e.target.value }))}
                       placeholder='Notas adicionales de la consulta'
                       rows={2}
-                      className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none'
+                      className='w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:bg-white transition-all resize-none'
                     />
                   </div>
                   <button
                     type='submit'
                     disabled={submitting}
-                    className='w-full py-2.5 text-sm text-white bg-blue-600 rounded-lg hover:opacity-90 active:scale-95 transition-all font-medium disabled:opacity-60'
+                    className='w-full py-2.5 text-sm text-white rounded-lg hover:opacity-90 active:scale-95 transition-all font-medium disabled:opacity-60' style={{ backgroundColor: '#15425b' }}
                   >
                     {submitting ? 'Guardando...' : 'Registrar historial'}
                   </button>

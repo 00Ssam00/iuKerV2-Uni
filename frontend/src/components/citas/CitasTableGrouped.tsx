@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, X, Check, Copy, MoreVertical, ChevronDown } from 'lucide-react';
 import type { CitaMedica, CitasAgrupadas, Asignacion } from '../../types/index';
 import { formatDateShort, formatTime } from '../../utils/formatters';
@@ -26,7 +26,15 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set(['Pasadas']));
+
+  useEffect(() => {
+    if (viewMode === 'estado') {
+      setCollapsedGroups(new Set(['Reprogramadas', 'Finalizadas', 'Canceladas']));
+    } else {
+      setCollapsedGroups(new Set(['Pasadas']));
+    }
+  }, [viewMode]);
 
   const citasAgrupadas: CitasAgrupadas = viewMode === 'fecha' ? agruparPorFecha(data) : agruparPorEstado(data);
 
@@ -67,8 +75,9 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
     return (
       <div className='bg-white rounded-xl border border-slate-200 shadow-sm'>
         <div className='flex flex-col items-center justify-center py-20 gap-3'>
-          <div className='w-8 h-8 border-2 rounded-full animate-spin' style={{ borderColor: `${primaryColor}40`, borderTopColor: 'transparent' }}>
-            <div className='w-8 h-8 border-2 border-t-transparent rounded-full animate-spin' style={{ borderColor: primaryColor, borderTopColor: 'transparent' }} />
+          <div className='relative w-8 h-8'>
+            <div className='absolute inset-0 rounded-full border-2' style={{ borderColor: `${primaryColor}40` }} />
+            <div className='absolute inset-0 rounded-full border-2 border-t-transparent animate-spin' style={{ borderColor: primaryColor, borderTopColor: 'transparent' }} />
           </div>
           <p className='text-sm text-slate-400'>Cargando citas...</p>
         </div>
@@ -138,6 +147,20 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
             {!collapsedGroups.has(groupName) && (
               <div className='overflow-x-auto'>
                 <table className='w-full text-sm'>
+                  <thead className='border-b border-slate-100'>
+                    <tr>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>ID</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Paciente</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Tipo Documento</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Número Documento</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Médico</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Consultorio</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Fecha</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Hora</th>
+                      <th className='px-5 py-2.5 text-left text-xs font-semibold text-slate-400 uppercase'>Estado</th>
+                      <th className='px-5 py-2.5 text-center text-xs font-semibold text-slate-400 uppercase'>Acciones</th>
+                    </tr>
+                  </thead>
                   <tbody className='divide-y divide-slate-100'>
                     {citas.map((cita, index) => (
                       <tr key={`${cita.idCita}-${index}`} className='hover:bg-slate-50 transition-colors'>

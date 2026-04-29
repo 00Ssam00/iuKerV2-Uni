@@ -11,7 +11,7 @@ const CitasMedicas = ({ onNavigate, initialSearch }: CitasMedicasProps) => {
   return (
     <DataTable
       baseUrl={CITAS_URL}
-      primaryColor='#2563EB'
+      primaryColor='#15425b'
       onNavigate={onNavigate}
       initialSearch={initialSearch}
     />

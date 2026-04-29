@@ -7,7 +7,7 @@ interface NavbarProps {
   onNavigate: (p: Pagina, params?: NavParams) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ activePage, primaryColor = '#2563EB', onNavigate }) => (
+const Navbar: React.FC<NavbarProps> = ({ activePage, primaryColor = '#15425b', onNavigate }) => (
   <header className='bg-white border-b border-slate-200 shadow-sm'>
     <div className='flex flex-col items-center pt-3 pb-4'>
       <img src='/logoVerticalNoCreditos.svg' alt='iuKer' style={{ height: '130px', width: 'auto' }} />

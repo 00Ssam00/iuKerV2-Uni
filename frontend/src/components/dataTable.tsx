@@ -23,7 +23,14 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
   const { data: asignaciones } = useAsignaciones();
   const [citaEditando, setCitaEditando] = useState<CitaMedica | null | 'nueva'>(null);
   const [idCitaHistorial, setIdCitaHistorial] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'normal' | 'fecha' | 'estado'>('normal');
+  const [viewMode, setViewMode] = useState<'normal' | 'fecha' | 'estado'>(
+    () => (sessionStorage.getItem('citasViewMode') as 'normal' | 'fecha' | 'estado') ?? 'normal'
+  );
+
+  const cambiarViewMode = (modo: 'normal' | 'fecha' | 'estado') => {
+    sessionStorage.setItem('citasViewMode', modo);
+    setViewMode(modo);
+  };
 
   return (
     <div className='min-h-screen bg-slate-50'>
@@ -39,7 +46,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
         {/* View Mode Selector */}
         <div className='mb-4 flex gap-3'>
           <button
-            onClick={() => setViewMode('normal')}
+            onClick={() => cambiarViewMode('normal')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               viewMode === 'normal'
                 ? 'text-white'
@@ -52,7 +59,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
             Vista General
           </button>
           <button
-            onClick={() => setViewMode('fecha')}
+            onClick={() => cambiarViewMode('fecha')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
               viewMode === 'fecha'
                 ? 'text-white'
@@ -66,7 +73,7 @@ const DataTable: React.FC<DataTableProps> = ({ baseUrl, primaryColor, onNavigate
             Por Fecha
           </button>
           <button
-            onClick={() => setViewMode('estado')}
+            onClick={() => cambiarViewMode('estado')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
               viewMode === 'estado'
                 ? 'text-white'
