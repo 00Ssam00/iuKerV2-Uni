@@ -128,11 +128,23 @@ export const agruparPorFecha = (citas: CitaMedica[]): CitasAgrupadas => {
   const resultado: CitasAgrupadas = {};
   Object.entries(grupos).forEach(([key, value]) => {
     if (value.length > 0) {
-      resultado[key] = value.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      resultado[key] = value.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
     }
   });
 
   return resultado;
+};
+
+export const getEstadoDisplay = (cita: CitaMedica): string => {
+  const esActiva = cita.codigoEstadoCita === 1 || cita.codigoEstadoCita === 2;
+  if (esActiva) {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const fechaCita = new Date(cita.fecha);
+    fechaCita.setHours(0, 0, 0, 0);
+    if (fechaCita <= hoy) return 'Por finalizar';
+  }
+  return cita.estadoCita;
 };
 
 export const agruparPorEstado = (citas: CitaMedica[]): CitasAgrupadas => {
@@ -140,6 +152,7 @@ export const agruparPorEstado = (citas: CitaMedica[]): CitasAgrupadas => {
   hoy.setHours(0, 0, 0, 0);
 
   const grupos: CitasAgrupadas = {
+    'Por finalizar': [],
     'Próximas': [],
     'Reprogramadas': [],
     'Finalizadas': [],
@@ -149,21 +162,17 @@ export const agruparPorEstado = (citas: CitaMedica[]): CitasAgrupadas => {
   citas.forEach(cita => {
     const fechaCita = new Date(cita.fecha);
     fechaCita.setHours(0, 0, 0, 0);
+    const esActiva = cita.codigoEstadoCita === 1 || cita.codigoEstadoCita === 2;
 
-    // Próximas: estado Activa y fecha >= hoy
-    if (cita.codigoEstadoCita === 1 && fechaCita >= hoy) {
+    if (esActiva && fechaCita <= hoy) {
+      grupos['Por finalizar'].push(cita);
+    } else if (esActiva && fechaCita > hoy) {
       grupos['Próximas'].push(cita);
-    }
-    // Reprogramadas: estado 3
-    else if (cita.codigoEstadoCita === 3) {
+    } else if (cita.codigoEstadoCita === 3) {
       grupos['Reprogramadas'].push(cita);
-    }
-    // Finalizadas: estado 4
-    else if (cita.codigoEstadoCita === 4) {
+    } else if (cita.codigoEstadoCita === 4) {
       grupos['Finalizadas'].push(cita);
-    }
-    // Canceladas: estado 5
-    else if (cita.codigoEstadoCita === 5) {
+    } else if (cita.codigoEstadoCita === 5) {
       grupos['Canceladas'].push(cita);
     }
   });
@@ -172,7 +181,7 @@ export const agruparPorEstado = (citas: CitaMedica[]): CitasAgrupadas => {
   const resultado: CitasAgrupadas = {};
   Object.entries(grupos).forEach(([key, value]) => {
     if (value.length > 0) {
-      resultado[key] = value.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      resultado[key] = value.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
     }
   });
 

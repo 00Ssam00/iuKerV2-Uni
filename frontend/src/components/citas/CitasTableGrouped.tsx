@@ -4,7 +4,7 @@ import type { CitaMedica, CitasAgrupadas, Asignacion } from '../../types/index';
 import { formatDateShort, formatTime } from '../../utils/formatters';
 import EstadoBadge from '../shared/EstadoBadge';
 import CitaActionMenu from './CitaActionMenu';
-import { agruparPorFecha, agruparPorEstado } from '../../hooks/useCitasMedicas';
+import { agruparPorFecha, agruparPorEstado, getEstadoDisplay } from '../../hooks/useCitasMedicas';
 
 interface CitasTableGroupedProps {
   data: CitaMedica[];
@@ -35,6 +35,8 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
       setCollapsedGroups(new Set(['Pasadas']));
     }
   }, [viewMode]);
+
+  const estadoDisplay = (cita: CitaMedica) => getEstadoDisplay(cita);
 
   const citasAgrupadas: CitasAgrupadas = viewMode === 'fecha' ? agruparPorFecha(data) : agruparPorEstado(data);
 
@@ -194,7 +196,7 @@ const CitasTableGrouped: React.FC<CitasTableGroupedProps> = ({
                         <td className='px-5 py-3.5 text-slate-600 tabular-nums'>{formatTime(cita.horaInicio)}</td>
                         <td className='px-5 py-3.5'>
                           <EstadoBadge
-                            estado={cita.estadoCita}
+                            estado={estadoDisplay(cita)}
                             onClick={cita.estadoCita === 'Finalizada' ? () => onVerHistorial(cita.idCita) : undefined}
                           />
                         </td>
