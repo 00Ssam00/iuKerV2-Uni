@@ -7,13 +7,15 @@ import {
 import { ICitaMedica } from '../../dominio/citaMedica/ICitaMedica.js';
 import { ICancelacionReprogramacionCitasCasosUso } from '../../aplicacion/servicios/cancelacionReprogramacionCita/ICancelacionReprogramacionCitasCasosUso.js';
 import { IAgendamientoCitasCasosUso } from '../../aplicacion/servicios/agendamientoCitasMedicas/IAgendamientoCitasCasosUso.js';
+import { IConsultaDisponibilidadCasosUso } from '../../aplicacion/servicios/consultaDisponibilidad/IConsultaDisponibilidadCasosUso.js';
 import { EstadoHttp } from './estadoHttp.enum.js';
 
 export class CitasMedicasControlador {
   constructor(
     private citasMedicasCasosUso: ICitasMedicasCasosUso,
     private cancelacionReprogramacionCasosUso: ICancelacionReprogramacionCitasCasosUso,
-    private agendamientoCitasCasosUso: IAgendamientoCitasCasosUso
+    private agendamientoCitasCasosUso: IAgendamientoCitasCasosUso,
+    private consultaDisponibilidadCasosUso: IConsultaDisponibilidadCasosUso,
   ) {}
 
   obtenerCitas = async (
@@ -146,6 +148,44 @@ export class CitasMedicasControlador {
         mensaje: 'Cita cancelada correctamente',
         citaCancelada,
       });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  obtenerHorarioMedico = async (
+    req: FastifyRequest<{ Querystring: { medico: string } }>,
+    res: FastifyReply
+  ) => {
+    try {
+      const { medico } = req.query;
+      const horario = await this.consultaDisponibilidadCasosUso.obtenerHorarioMedico(medico);
+      return res.code(EstadoHttp.OK).send(horario);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  obtenerDisponibilidad = async (
+    req: FastifyRequest<{ Querystring: { medico: string; fecha: string } }>,
+    res: FastifyReply
+  ) => {
+    try {
+      const { medico, fecha } = req.query;
+      const disponibilidad = await this.consultaDisponibilidadCasosUso.obtenerDisponibilidad(medico, fecha);
+      return res.code(EstadoHttp.OK).send(disponibilidad);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  obtenerProximoDisponible = async (_req: FastifyRequest, res: FastifyReply) => {
+    try {
+      const resultado = await this.consultaDisponibilidadCasosUso.obtenerProximoDisponible();
+      if (!resultado) {
+        return res.code(EstadoHttp.OK).send({ mensaje: 'No hay disponibilidad en los próximos 60 días' });
+      }
+      return res.code(EstadoHttp.OK).send(resultado);
     } catch (err) {
       throw err;
     }

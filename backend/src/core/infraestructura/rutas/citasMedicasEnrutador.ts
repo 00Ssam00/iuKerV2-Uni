@@ -4,10 +4,15 @@ import { CitasMedicasRepositorio } from '../repositorios/postgres/CitasMedicasRe
 import { CitasMedicasCasosUso } from '../../aplicacion/citaMedica/CitasMedicasCasosUso.js';
 import { CancelacionReprogramacionCitasCasosUso } from '../../aplicacion/servicios/cancelacionReprogramacionCita/CancelacionReprogramacionCitasCasosUso.js';
 import { AgendamientoCitasCasosUso } from '../../aplicacion/servicios/agendamientoCitasMedicas/AgendamientoCitasCasosUso.js';
+import { ConsultaDisponibilidadCasosUso } from '../../aplicacion/servicios/consultaDisponibilidad/ConsultaDisponibilidadCasosUso.js';
 import { MedicosRepositorio } from '../repositorios/postgres/MedicosRepositorio.js';
 import { PacientesRepositorio } from '../repositorios/postgres/PacientesRepositorio.js';
 
 function citasMedicasEnrutador(app: FastifyInstance, citasMedicasController: CitasMedicasControlador) {
+  // Rutas específicas antes de las paramétricas para evitar colisiones
+  app.get('/citas-medicas/horario', citasMedicasController.obtenerHorarioMedico);
+  app.get('/citas-medicas/disponibilidad', citasMedicasController.obtenerDisponibilidad);
+  app.get('/citas-medicas/proximo-disponible', citasMedicasController.obtenerProximoDisponible);
   app.get('/citas-medicas', citasMedicasController.obtenerCitas);
   app.get('/citas-medicas/:idCita', citasMedicasController.obtenerCitaPorId);
   app.post('/citas-medicas', citasMedicasController.agendarCita);
@@ -23,6 +28,7 @@ export async function construirCitasEnrutador(app: FastifyInstance) {
 
   const medicoRepositorio = new MedicosRepositorio();
   const pacientesRepositorio = new PacientesRepositorio();
+
   const cancelacionReprogramacionCasosUso = new CancelacionReprogramacionCitasCasosUso(
     citasMedicasRepositorio,
     medicoRepositorio
@@ -34,10 +40,16 @@ export async function construirCitasEnrutador(app: FastifyInstance) {
     pacientesRepositorio
   );
 
+  const consultaDisponibilidadCasosUso = new ConsultaDisponibilidadCasosUso(
+    citasMedicasRepositorio,
+    medicoRepositorio,
+  );
+
   const citasMedicasController = new CitasMedicasControlador(
     citasCasosUso,
     cancelacionReprogramacionCasosUso,
-    agendamientoCitaCasosUso
+    agendamientoCitaCasosUso,
+    consultaDisponibilidadCasosUso,
   );
   citasMedicasEnrutador(app, citasMedicasController);
 }
