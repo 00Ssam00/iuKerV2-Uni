@@ -251,10 +251,13 @@ export class CitasMedicasRepositorio implements ICitasMedicasRepositorio {
 
   async eliminarCitasPorPaciente(tipoDocPaciente: number, numeroDocPaciente: string): Promise<void> {
     await ejecutarConsulta(
+      'DELETE FROM historial_paciente WHERE id_cita IN (SELECT id_cita FROM citas_medicas WHERE tipo_doc_paciente = $1 AND numero_doc_paciente = $2)',
+      [tipoDocPaciente, numeroDocPaciente]
+    );
+    await ejecutarConsulta(
       'DELETE FROM citas_medicas WHERE id_cita_anterior IN (SELECT id_cita FROM citas_medicas WHERE tipo_doc_paciente = $1 AND numero_doc_paciente = $2)',
       [tipoDocPaciente, numeroDocPaciente]
     );
-
     await ejecutarConsulta('DELETE FROM citas_medicas WHERE tipo_doc_paciente = $1 AND numero_doc_paciente = $2', [
       tipoDocPaciente,
       numeroDocPaciente,
