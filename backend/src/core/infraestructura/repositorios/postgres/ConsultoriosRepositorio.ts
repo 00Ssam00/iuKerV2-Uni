@@ -72,6 +72,8 @@ export class ConsultorioRepositorio implements IConsultoriosRepositorio {
 
   async eliminarConsultorio(idConsultorio: string): Promise<void> {
     await ejecutarConsulta(
-      "DELETE FROM consultorios WHERE id_consultorio = $1", [idConsultorio]);
+      'DELETE FROM asignacion_medicos WHERE id_consultorio = $1', [idConsultorio]);
+    await ejecutarConsulta(
+      'DELETE FROM consultorios WHERE id_consultorio = $1', [idConsultorio]);
   }
 }

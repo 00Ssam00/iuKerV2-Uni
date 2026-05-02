@@ -72,8 +72,6 @@ const MedicoFormModal: React.FC<MedicoFormModalProps> = ({ primaryColor, onSucce
     try {
       if (esEdicion) {
         await axios.put(`${MEDICOS_URL}/${formData.tarjetaProfesional}`, {
-          tipoDoc: formData.tipoDoc,
-          numeroDoc: formData.numeroDoc,
           nombre: formData.nombre,
           apellido: formData.apellido,
           fechaNacimiento: formData.fechaNacimiento,

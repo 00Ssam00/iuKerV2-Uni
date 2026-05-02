@@ -1,7 +1,8 @@
 import { pacienteRespuestaDTO } from '../dtos/pacienteRespuestaDTO.js';
 
 export interface pacienteFila {
-  tipoDoc: number;
+  tipoDoc: string;
+  tipoDocId: number;
   numeroDoc: string;
   nombre: string;
   apellido: string;
@@ -15,6 +16,7 @@ export interface pacienteFila {
 export function mapFilaPaciente(fila: pacienteFila): pacienteRespuestaDTO {
   return {
     tipoDoc: fila.tipoDoc,
+    tipoDocId: fila.tipoDocId,
     numeroDoc: fila.numeroDoc,
     nombre: fila.nombre,
     apellido: fila.apellido,
