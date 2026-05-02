@@ -1,7 +1,10 @@
 import React from 'react';
-import { Calendar, Ban, Trash2 } from 'lucide-react';
+import { Calendar, Ban, Trash2, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import type { CitaMedica } from '../../types/index';
+import { getEstadoDisplay } from '../../hooks/useCitasMedicas';
+import { useToast } from '../../hooks/useToast';
+import { extraerMensajeAxios } from '../../utils/formatters';
 
 interface CitaActionMenuProps {
   cita: CitaMedica;
@@ -16,18 +19,30 @@ interface CitaActionMenuProps {
 const CitaActionMenu: React.FC<CitaActionMenuProps> = ({
   cita, menuPos, baseUrl, primaryColor, onReagendar, onSuccess, onClose,
 }) => {
+  const { showToast } = useToast();
   const bloqueada = cita.estadoCita === 'Cancelada' || cita.estadoCita === 'Finalizada';
+  const puedeFinalizar = getEstadoDisplay(cita) === 'Por finalizar';
+
+  const handleFinalizar = async () => {
+    if (!window.confirm(`¿Confirmas que deseas finalizar la cita de ${cita.paciente}?`)) return;
+    try {
+      await axios.put(`${baseUrl}/finalizacion/${cita.idCita}`);
+      showToast('Cita finalizada exitosamente', 'success');
+      onSuccess();
+    } catch (err) {
+      showToast(extraerMensajeAxios(err, 'Error al finalizar la cita'), 'error');
+    }
+    onClose();
+  };
 
   const handleCancelar = async () => {
     if (!window.confirm(`¿Está seguro que desea cancelar la cita de ${cita.paciente}?`)) return;
     try {
       await axios.put(`${baseUrl}/cancelacion/${cita.idCita}`);
+      showToast('Cita cancelada exitosamente', 'success');
       onSuccess();
     } catch (err) {
-      const msg = axios.isAxiosError(err)
-        ? err.response?.data?.mensaje ?? 'Error al cancelar la cita'
-        : 'Error al cancelar la cita';
-      alert(msg);
+      showToast(extraerMensajeAxios(err, 'Error al cancelar la cita'), 'error');
     }
     onClose();
   };
@@ -36,10 +51,10 @@ const CitaActionMenu: React.FC<CitaActionMenuProps> = ({
     if (!window.confirm(`¿Está seguro que desea eliminar la cita ${cita.idCita}?`)) return;
     try {
       await axios.delete(`${baseUrl}/eliminacion/${cita.idCita}`);
+      showToast('Cita eliminada exitosamente', 'success');
       onSuccess();
-      alert('Cita eliminada exitosamente');
-    } catch {
-      alert('Error al eliminar la cita');
+    } catch (err) {
+      showToast(extraerMensajeAxios(err, 'Error al eliminar la cita'), 'error');
     }
     onClose();
   };
@@ -51,6 +66,15 @@ const CitaActionMenu: React.FC<CitaActionMenuProps> = ({
         className='fixed z-50 w-44 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden'
         style={{ top: menuPos.top, right: menuPos.right }}
       >
+        {puedeFinalizar && (
+          <button
+            onClick={handleFinalizar}
+            className='w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-sm text-emerald-600 hover:bg-emerald-50 transition-colors'
+          >
+            <CheckCircle size={14} />
+            Finalizar cita
+          </button>
+        )}
         <button
           onClick={() => { if (!bloqueada) { onReagendar(cita); onClose(); } }}
           disabled={bloqueada}

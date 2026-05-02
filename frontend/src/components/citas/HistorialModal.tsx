@@ -3,7 +3,8 @@ import { X } from 'lucide-react';
 import axios from 'axios';
 import type { HistorialEntry } from '../../types/index';
 import { HISTORIAL_URL } from '../../constants/api';
-import { formatDateShort, formatDateTime } from '../../utils/formatters';
+import { formatDateShort, formatDateTime, extraerMensajeAxios } from '../../utils/formatters';
+import { useToast } from '../../hooks/useToast';
 
 interface HistorialModalProps {
   idCita: string;
@@ -11,6 +12,7 @@ interface HistorialModalProps {
 }
 
 const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
+  const { showToast } = useToast();
   const [historial, setHistorial] = useState<HistorialEntry | null | 'vacio'>(null);
   const [loading, setLoading] = useState(true);
   const [formInline, setFormInline] = useState({ diagnostico: '', descripcion: '' });
@@ -42,7 +44,7 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
   const handleRegistrar = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formInline.diagnostico.trim()) {
-      alert('El diagnóstico es obligatorio');
+      showToast('El diagnóstico es obligatorio', 'error');
       return;
     }
     try {
@@ -57,10 +59,7 @@ const HistorialModal: React.FC<HistorialModalProps> = ({ idCita, onClose }) => {
       const res = await axios.get<{ historial: HistorialEntry }>(`${HISTORIAL_URL}/cita/${idCita}`);
       setHistorial(res.data.historial);
     } catch (err) {
-      const msg = axios.isAxiosError(err)
-        ? err.response?.data?.mensaje ?? 'Error al registrar el historial'
-        : 'Error al registrar el historial';
-      alert(msg);
+      showToast(extraerMensajeAxios(err, 'Error al registrar el historial'), 'error');
     } finally {
       setSubmitting(false);
     }
