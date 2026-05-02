@@ -116,7 +116,7 @@ const AsignacionFormModal: React.FC<AsignacionFormModalProps> = ({
                 ) : (
                   medicosNoAsignados.map(medico => (
                     <option key={medico.tarjetaProfesional} value={medico.tarjetaProfesional}>
-                      {medico.nombre} {medico.apellido} ({medico.especialidad})
+                      {medico.tarjetaProfesional} - {medico.nombre} {medico.apellido}
                     </option>
                   ))
                 )}

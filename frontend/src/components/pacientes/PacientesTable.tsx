@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MoreVertical, Trash } from 'lucide-react';
+import { MoreVertical, Trash, Edit } from 'lucide-react';
 import type { Paciente } from '../../types/index';
 
 interface PacientesTableProps {
@@ -7,6 +7,7 @@ interface PacientesTableProps {
   loading: boolean;
   error: string | null;
   primaryColor: string;
+  onEditar?: (paciente: Paciente) => void;
   onEliminar?: (numeroDoc: string) => void;
   onRetry: () => void;
 }
@@ -16,6 +17,7 @@ const PacientesTable: React.FC<PacientesTableProps> = ({
   loading,
   error,
   primaryColor,
+  onEditar,
   onEliminar,
   onRetry,
 }) => {
@@ -120,12 +122,18 @@ const PacientesTable: React.FC<PacientesTableProps> = ({
         <>
           <div className='fixed inset-0 z-30' onClick={() => { setOpenMenuId(null); setMenuPos(null); }} />
           <div
-            className='fixed z-40 w-32 bg-white rounded-lg shadow-lg border border-slate-200'
+            className='fixed z-40 w-36 bg-white rounded-lg shadow-lg border border-slate-200'
             style={{ top: menuPos.top, right: menuPos.right }}
           >
             <button
+              onClick={() => { onEditar?.(pacienteMenu); setOpenMenuId(null); setMenuPos(null); }}
+              className='w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors'
+            >
+              <Edit size={14} /> Editar
+            </button>
+            <button
               onClick={() => { onEliminar?.(pacienteMenu.numeroDoc); setOpenMenuId(null); setMenuPos(null); }}
-              className='w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors'
+              className='w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors border-t border-slate-200'
             >
               <Trash size={14} /> Eliminar
             </button>

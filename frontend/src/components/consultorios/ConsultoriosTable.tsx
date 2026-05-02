@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MoreVertical, Edit, Trash, Link } from 'lucide-react';
+import { MoreVertical, Edit, Trash, Link, Unlink } from 'lucide-react';
 import type { Consultorio, Asignacion, Medico } from '../../types/index';
 
 interface ConsultoriosTableProps {
@@ -12,6 +12,7 @@ interface ConsultoriosTableProps {
   onEditar?: (consultorio: Consultorio) => void;
   onEliminar?: (id: string) => void;
   onAsignar?: (consultorio: Consultorio) => void;
+  onDesasignar?: (tarjetaMedico: string) => void;
   onRetry: () => void;
 }
 
@@ -25,6 +26,7 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
   onEditar,
   onEliminar,
   onAsignar,
+  onDesasignar,
   onRetry,
 }) => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -43,9 +45,9 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
 
   const getMedicoAsignado = (consultorioId: string) => {
     const asignacion = asignaciones.find(a => a.idConsultorio === consultorioId);
-    if (!asignacion) return 'Sin asignar';
+    if (!asignacion) return null;
     const medico = medicos.find(m => m.tarjetaProfesional === asignacion.tarjetaProfesionalMedico);
-    return medico ? `${medico.tarjetaProfesional} - ${medico.especialidad}` : 'Sin asignar';
+    return medico ? { tarjeta: medico.tarjetaProfesional, label: `${medico.tarjetaProfesional} - ${medico.especialidad}` } : null;
   };
 
   if (loading) {
@@ -90,6 +92,7 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
   }
 
   const consultorioMenu = openMenuId ? data.find(c => c.idConsultorio === openMenuId) : null;
+  const medicoDelMenuAbierto = consultorioMenu ? getMedicoAsignado(consultorioMenu.idConsultorio) : null;
 
   return (
     <>
@@ -110,10 +113,10 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
                   <td className='px-6 py-4 text-sm text-slate-700 font-medium'>{consultorio.idConsultorio}</td>
                   <td className='px-6 py-4 text-sm text-slate-600'>{consultorio.ubicacion || '—'}</td>
                   <td className='px-6 py-4 text-sm'>
-                    {getMedicoAsignado(consultorio.idConsultorio) === 'Sin asignar' ? (
+                    {getMedicoAsignado(consultorio.idConsultorio) === null ? (
                       <span className='text-slate-400'>Sin asignar</span>
                     ) : (
-                      <span className='text-slate-700 font-medium'>{getMedicoAsignado(consultorio.idConsultorio)}</span>
+                      <span className='text-slate-700 font-medium'>{getMedicoAsignado(consultorio.idConsultorio)?.label}</span>
                     )}
                   </td>
                   <td className='px-6 py-4 text-center'>
@@ -135,7 +138,7 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
         <>
           <div className='fixed inset-0 z-30' onClick={() => { setOpenMenuId(null); setMenuPos(null); }} />
           <div
-            className='fixed z-40 w-40 bg-white rounded-lg shadow-lg border border-slate-200'
+            className='fixed z-40 w-44 bg-white rounded-lg shadow-lg border border-slate-200'
             style={{ top: menuPos.top, right: menuPos.right }}
           >
             <button
@@ -150,6 +153,14 @@ const ConsultoriosTable: React.FC<ConsultoriosTableProps> = ({
             >
               <Edit size={14} /> Editar
             </button>
+            {medicoDelMenuAbierto && (
+              <button
+                onClick={() => { onDesasignar?.(medicoDelMenuAbierto.tarjeta); setOpenMenuId(null); setMenuPos(null); }}
+                className='w-full text-left px-4 py-2 text-sm text-orange-600 hover:bg-orange-50 flex items-center gap-2 transition-colors border-t border-slate-200'
+              >
+                <Unlink size={14} /> Desasignar Médico
+              </button>
+            )}
             <button
               onClick={() => { onEliminar?.(consultorioMenu.idConsultorio); setOpenMenuId(null); setMenuPos(null); }}
               className='w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors border-t border-slate-200'

@@ -1,3 +1,27 @@
+import axios from 'axios';
+
+/**
+ * Extrae el mensaje de error más descriptivo de una respuesta Axios.
+ * Prioridad: mensaje de campo específico Zod > error general > mensaje genérico > fallback.
+ */
+export const extraerMensajeAxios = (err: unknown, fallback: string): string => {
+  if (!axios.isAxiosError(err)) return fallback;
+  const data = err.response?.data;
+  if (!data) return fallback;
+  if (Array.isArray(data.detalles) && data.detalles.length > 0) {
+    return data.detalles[0].mensaje ?? data.error ?? data.mensaje ?? fallback;
+  }
+  return data.error ?? data.mensaje ?? fallback;
+};
+
+/** Devuelve los nombres de los campos que fallaron en una validación Zod del backend. */
+export const extraerCamposConError = (err: unknown): string[] => {
+  if (!axios.isAxiosError(err)) return [];
+  const detalles = err.response?.data?.detalles;
+  if (!Array.isArray(detalles)) return [];
+  return detalles.map((d: { ruta: string }) => d.ruta).filter(Boolean);
+};
+
 export const formatDate = (dateString: string | null): string => {
   if (!dateString) return '-';
   try {

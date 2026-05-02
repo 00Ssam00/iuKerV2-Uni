@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { Consultorio, ConsultorioDTO } from '../../types/index';
 import { CONSULTORIOS_URL } from '../../constants/api';
 import { useToast } from '../../hooks/useToast';
+import { extraerMensajeAxios } from '../../utils/formatters';
 
 interface ConsultorioFormModalProps {
   consultorioToEdit: Consultorio | null;
@@ -52,10 +53,7 @@ const ConsultorioFormModal: React.FC<ConsultorioFormModalProps> = ({
       onSuccess();
       onClose();
     } catch (err) {
-      const mensaje = axios.isAxiosError(err)
-        ? err.response?.data?.mensaje ?? `Error al ${isEditing ? 'actualizar' : 'registrar'} el consultorio`
-        : `Error al ${isEditing ? 'actualizar' : 'registrar'} el consultorio`;
-      showToast(mensaje, 'error');
+      showToast(extraerMensajeAxios(err, `Error al ${isEditing ? 'actualizar' : 'registrar'} el consultorio`), 'error');
     }
   };
 

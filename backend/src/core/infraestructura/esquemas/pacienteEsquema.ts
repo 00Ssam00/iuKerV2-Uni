@@ -6,7 +6,9 @@ export const pacienteEsquema = z.object({
   tipoDoc: z.number('El tipo es 1, 2, 3 o 4'),
   nombre: EsquemasComunes.Nombre,
   apellido: EsquemasComunes.Apellido,
-  fechaNacimiento: EsquemasComunes.Fecha.pipe(z.coerce.date()),
+  fechaNacimiento: EsquemasComunes.Fecha
+    .pipe(z.coerce.date())
+    .refine((d) => d < new Date(), { message: 'La fecha de nacimiento no puede ser una fecha futura' }),
   sexo: EsquemasComunes.Sexo,
   email: EsquemasComunes.Email,
   telefono: EsquemasComunes.Telefono,

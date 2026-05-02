@@ -7,7 +7,8 @@ export const crearMedicoEsquema = z.object({
   numeroDoc: EsquemasComunes.NumeroDocumento,
   nombre: EsquemasComunes.Nombre,
   apellido: EsquemasComunes.Apellido,
-  fechaNacimiento: EsquemasComunes.Fecha,
+  fechaNacimiento: EsquemasComunes.Fecha
+    .refine((str) => new Date(str) < new Date(), { message: 'La fecha de nacimiento no puede ser una fecha futura' }),
   sexo: EsquemasComunes.Sexo,
 
   especialidad: z
