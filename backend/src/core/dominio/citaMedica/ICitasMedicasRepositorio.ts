@@ -34,5 +34,9 @@ export interface ICitasMedicasRepositorio {
 
   eliminarCitasPorPaciente(tipoDocPaciente: number, numeroDocPaciente: string): Promise<void>;
   obtenerCitasPorPaciente(numeroDoc: string, limite?: number): Promise<ConsultaCitasPacienteRespuestaDTO[]>;
-  eliminarCitasPorMedico(tarjetaProfesional : string) : Promise <void>;
+  eliminarCitasPorMedico(tarjetaProfesional: string): Promise<void>;
+
+  obtenerSlotsOcupados(medico: string, fecha: string): Promise<string[]>;
+  obtenerJornadasMedico(medico: string, diaSemana: number): Promise<{ inicioJornada: string; finJornada: string }[]>;
+  obtenerJornadasPorMedico(medico: string): Promise<{ diaSemana: number; inicioJornada: string; finJornada: string }[]>;
 }

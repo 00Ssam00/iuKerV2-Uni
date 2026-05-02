@@ -41,7 +41,7 @@ export class CitasMedicasRepositorio implements ICitasMedicasRepositorio {
   }
 
   async obtenerCitas(limite?: number): Promise<CitaMedicaRespuestaDTO[]> {
-    let query = this._queryBase + `ORDER BY c.fecha ASC`;
+    let query = this._queryBase + `ORDER BY c.fecha DESC`;
 
     const valores: number[] = [];
 
@@ -256,5 +256,49 @@ export class CitasMedicasRepositorio implements ICitasMedicasRepositorio {
       tipoDocPaciente,
       numeroDocPaciente,
     ]);
+  }
+
+  async obtenerSlotsOcupados(medico: string, fecha: string): Promise<string[]> {
+    const query = `
+      SELECT TO_CHAR(hora_inicio, 'HH24:MI') AS "horaInicio"
+      FROM citas_medicas
+      WHERE medico = $1
+        AND fecha = $2::DATE
+        AND estado NOT IN (5)
+    `;
+    const resultado = await ejecutarConsulta(query, [medico, fecha]);
+    return resultado.rows.map((r: any) => r.horaInicio);
+  }
+
+  async obtenerJornadasMedico(medico: string, diaSemana: number): Promise<{ inicioJornada: string; finJornada: string }[]> {
+    const query = `
+      SELECT TO_CHAR(inicio_jornada, 'HH24:MI') AS "inicioJornada",
+             TO_CHAR(fin_jornada,   'HH24:MI') AS "finJornada"
+      FROM asignacion_medicos
+      WHERE tarjeta_profesional_medico = $1
+        AND dia_semana = $2
+    `;
+    const resultado = await ejecutarConsulta(query, [medico, diaSemana]);
+    return resultado.rows.map((r: any) => ({
+      inicioJornada: r.inicioJornada,
+      finJornada: r.finJornada,
+    }));
+  }
+
+  async obtenerJornadasPorMedico(medico: string): Promise<{ diaSemana: number; inicioJornada: string; finJornada: string }[]> {
+    const query = `
+      SELECT dia_semana AS "diaSemana",
+             TO_CHAR(inicio_jornada, 'HH24:MI') AS "inicioJornada",
+             TO_CHAR(fin_jornada,   'HH24:MI') AS "finJornada"
+      FROM asignacion_medicos
+      WHERE tarjeta_profesional_medico = $1
+      ORDER BY dia_semana, inicio_jornada
+    `;
+    const resultado = await ejecutarConsulta(query, [medico]);
+    return resultado.rows.map((r: any) => ({
+      diaSemana: r.diaSemana,
+      inicioJornada: r.inicioJornada,
+      finJornada: r.finJornada,
+    }));
   }
 }
