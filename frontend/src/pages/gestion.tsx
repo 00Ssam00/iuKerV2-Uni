@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Pagina, NavParams } from '../App';
-import type { Consultorio } from '../types/index';
+import type { Consultorio, Paciente, Medico } from '../types/index';
 import { usePacientes } from '../hooks/usePacientes';
 import { useMedicos } from '../hooks/useMedicos';
 import { useConsultorios } from '../hooks/useConsultorios';
@@ -17,7 +17,7 @@ import ConsultoriosTable from '../components/consultorios/ConsultoriosTable';
 import ConsultorioFormModal from '../components/consultorios/ConsultorioFormModal';
 import AsignacionFormModal from '../components/consultorios/AsignacionFormModal';
 import axios from 'axios';
-import { MEDICOS_URL, CONSULTORIOS_URL } from '../constants/api';
+import { MEDICOS_URL, CONSULTORIOS_URL, PACIENTES_URL } from '../constants/api';
 import { useToast } from '../hooks/useToast';
 
 interface GestionProps {
@@ -34,8 +34,11 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
     sessionStorage.setItem('gestionTab', tab);
     setCurrentTab(tab);
   };
-  const [consultorioEditando, setConsultorioEditando] = useState<any>(null);
+
+  const [consultorioEditando, setConsultorioEditando] = useState<Consultorio | null>(null);
   const [consultorioParaAsignar, setConsultorioParaAsignar] = useState<Consultorio | null>(null);
+  const [pacienteEditando, setPacienteEditando] = useState<Paciente | null>(null);
+  const [medicoEditando, setMedicoEditando] = useState<Medico | null>(null);
   const [showPacienteModal, setShowPacienteModal] = useState(false);
   const [showMedicoModal, setShowMedicoModal] = useState(false);
   const [showConsultorioModal, setShowConsultorioModal] = useState(false);
@@ -44,10 +47,25 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
   const pacientes = usePacientes();
   const medicos = useMedicos();
   const consultorios = useConsultorios();
-  const { data: asignaciones } = useAsignaciones();
+  const { data: asignaciones, eliminarAsignacion, recargar: recargarAsignaciones } = useAsignaciones();
   const { showToast } = useToast();
 
   const primaryColor = '#15425b';
+
+  const handleEliminarPaciente = async (numeroDoc: string) => {
+    if (window.confirm('¿Estás seguro? Se eliminará todo el historial asociado al paciente.')) {
+      try {
+        await axios.delete(`${PACIENTES_URL}/${numeroDoc}`);
+        pacientes.recargar();
+        showToast('Paciente eliminado exitosamente', 'success');
+      } catch (err) {
+        const mensaje = axios.isAxiosError(err)
+          ? err.response?.data?.mensaje ?? 'Error al eliminar el paciente'
+          : 'Error al eliminar el paciente';
+        showToast(mensaje, 'error');
+      }
+    }
+  };
 
   const handleEliminarMedico = async (tarjeta: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este médico?')) {
@@ -69,12 +87,24 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
       try {
         await axios.delete(`${CONSULTORIOS_URL}/${id}`);
         consultorios.recargar();
+        recargarAsignaciones();
         showToast('Consultorio eliminado exitosamente', 'success');
       } catch (err) {
         const mensaje = axios.isAxiosError(err)
           ? err.response?.data?.mensaje ?? 'Error al eliminar el consultorio'
           : 'Error al eliminar el consultorio';
         showToast(mensaje, 'error');
+      }
+    }
+  };
+
+  const handleDesasignarMedico = async (tarjetaMedico: string) => {
+    if (window.confirm('¿Estás seguro de que deseas desasignar al médico de este consultorio?')) {
+      try {
+        await eliminarAsignacion(tarjetaMedico);
+        consultorios.recargar();
+      } catch {
+        // El error ya lo maneja useAsignaciones con un toast
       }
     }
   };
@@ -126,6 +156,7 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
               primaryColor={primaryColor}
               onSearch={pacientes.buscar}
               onNuevoPaciente={() => {
+                setPacienteEditando(null);
                 setShowPacienteModal(true);
               }}
             />
@@ -134,6 +165,11 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
               loading={pacientes.loading}
               error={pacientes.error}
               primaryColor={primaryColor}
+              onEditar={(p) => {
+                setPacienteEditando(p);
+                setShowPacienteModal(true);
+              }}
+              onEliminar={handleEliminarPaciente}
               onRetry={pacientes.recargar}
             />
           </div>
@@ -145,6 +181,7 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
               primaryColor={primaryColor}
               onSearch={medicos.buscar}
               onNuevoMedico={() => {
+                setMedicoEditando(null);
                 setShowMedicoModal(true);
               }}
             />
@@ -153,7 +190,8 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
               loading={medicos.loading}
               error={medicos.error}
               primaryColor={primaryColor}
-              onEditar={() => {
+              onEditar={(m) => {
+                setMedicoEditando(m);
                 setShowMedicoModal(true);
               }}
               onEliminar={handleEliminarMedico}
@@ -185,6 +223,7 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
               }}
               onEliminar={handleEliminarConsultorio}
               onAsignar={handleAsignarMedico}
+              onDesasignar={handleDesasignarMedico}
               onRetry={consultorios.recargar}
             />
           </div>
@@ -196,9 +235,14 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
       {showMedicoModal && (
         <MedicoFormModal
           primaryColor={primaryColor}
-          onSuccess={medicos.recargar}
+          medicoToEdit={medicoEditando ?? undefined}
+          onSuccess={() => {
+            medicos.recargar();
+            setMedicoEditando(null);
+          }}
           onClose={() => {
             setShowMedicoModal(false);
+            setMedicoEditando(null);
           }}
         />
       )}
@@ -206,9 +250,14 @@ const Gestion: React.FC<GestionProps> = ({ onNavigate, activeTab = 'pacientes' }
       {showPacienteModal && (
         <PacienteFormModal
           primaryColor={primaryColor}
-          onSuccess={pacientes.recargar}
+          pacienteToEdit={pacienteEditando ?? undefined}
+          onSuccess={() => {
+            pacientes.recargar();
+            setPacienteEditando(null);
+          }}
           onClose={() => {
             setShowPacienteModal(false);
+            setPacienteEditando(null);
           }}
         />
       )}

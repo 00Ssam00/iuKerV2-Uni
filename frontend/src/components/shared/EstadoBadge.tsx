@@ -6,11 +6,12 @@ interface EstadoBadgeProps {
 }
 
 const estilos: Record<string, string> = {
-  Activa:       'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
-  Finalizada:   'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
-  Cancelada:    'bg-red-50 text-red-600 ring-1 ring-red-200',
-  Reprogramada: 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
-  Actualizada:  'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200',
+  Activa:           'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+  Finalizada:       'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+  Cancelada:        'bg-red-50 text-red-600 ring-1 ring-red-200',
+  Reprogramada:     'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
+  Actualizada:      'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200',
+  'Por finalizar':  'bg-amber-50 text-amber-700 ring-1 ring-amber-300',
 };
 
 const EstadoBadge: React.FC<EstadoBadgeProps> = ({ estado, onClick }) => {
@@ -20,7 +21,7 @@ const EstadoBadge: React.FC<EstadoBadgeProps> = ({ estado, onClick }) => {
     return (
       <button
         onClick={onClick}
-        className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all ${clases}`}
+        className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all ${clases}`}
         title='Ver historial clínico'
       >
         {estado}
@@ -29,7 +30,7 @@ const EstadoBadge: React.FC<EstadoBadgeProps> = ({ estado, onClick }) => {
   }
 
   return (
-    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${clases}`}>
+    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${clases}`}>
       {estado}
     </span>
   );

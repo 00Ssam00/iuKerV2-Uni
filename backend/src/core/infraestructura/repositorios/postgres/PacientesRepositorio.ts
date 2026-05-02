@@ -10,16 +10,17 @@ export class PacientesRepositorio implements IPacientesRepositorio {
   private get _queryBase(): string {
     return `
      SELECT
-      tipo_doc AS "tipoDoc",
-      numero_doc AS "numeroDoc",
-      nombre,
-      apellido,
-      fecha_nacimiento AS "fechaNacimiento",
-      sexo,
-      email,
-      telefono,
-      direccion
-    FROM pacientes
+      td.descripcion AS "tipoDoc",
+      p.numero_doc AS "numeroDoc",
+      p.nombre,
+      p.apellido,
+      p.fecha_nacimiento AS "fechaNacimiento",
+      p.sexo,
+      p.email,
+      p.telefono,
+      p.direccion
+    FROM pacientes p
+    INNER JOIN tipo_documentos td ON td.id_documento = p.tipo_doc
     `;
   }
   async existePacientePorDocumento(numeroDoc: string, tipoDoc: number): Promise<boolean> {
@@ -47,7 +48,7 @@ export class PacientesRepositorio implements IPacientesRepositorio {
   }
 
   async obtenerPacientePorId(numeroDoc: string): Promise<pacienteRespuestaDTO | null> {
-    const query = this._queryBase + 'WHERE numero_doc = $1';
+    const query = this._queryBase + 'WHERE p.numero_doc = $1';
     const resultado = await ejecutarConsulta(query, [numeroDoc]);
 
     if (resultado.rows.length === 0) return null;
