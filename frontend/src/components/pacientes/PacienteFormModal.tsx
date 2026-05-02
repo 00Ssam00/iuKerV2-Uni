@@ -78,7 +78,6 @@ const PacienteFormModal: React.FC<PacienteFormModalProps> = ({ primaryColor, onS
     try {
       if (esEdicion) {
         await axios.put(`${PACIENTES_URL}/${formData.numeroDoc}`, {
-          tipoDoc:   formData.tipoDoc,
           email:     formData.email,
           telefono:  formData.telefono,
           direccion: formData.direccion,

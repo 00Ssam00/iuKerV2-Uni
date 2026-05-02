@@ -11,6 +11,7 @@ export class PacientesRepositorio implements IPacientesRepositorio {
     return `
      SELECT
       td.descripcion AS "tipoDoc",
+      p.tipo_doc AS "tipoDocId",
       p.numero_doc AS "numeroDoc",
       p.nombre,
       p.apellido,
